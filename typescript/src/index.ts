@@ -1,5 +1,5 @@
-import Express, { NextFunction, Request, Response } from 'express';
-import { Client, middleware, ClientConfig, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
+import Express, { Request, Response } from 'express';
+import { Client, middleware, ClientConfig, MiddlewareConfig, MessageEvent, EventMessage } from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -17,12 +17,17 @@ app.get('/', (request: Request, response: Response) => {
 });
 
 app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
+    console.log('/webhook');
     Promise
         .all(request.body.events.map(handleEvent))
-        .then((result) => response.json(result));
+        .then((result) => response.json(result))
+        .catch((err) => {
+            console.error(err);
+            response.status(500).end();
+        });
 });
 
-function handleEvent(event: WebhookEvent) {
+function handleEvent(event: MessageEvent) {
     if (event.type !== 'message' || event.message.type !== 'text') {
         return Promise.resolve(null);
     }
@@ -37,4 +42,3 @@ const port: any = process.env.PORT || 8888;
 app.listen(port, () => {
     console.log('Server is running.');
 });
-export default app;
