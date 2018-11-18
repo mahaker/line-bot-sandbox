@@ -10,6 +10,9 @@
     "lint": "tslint ./src/*",
     "test": "jest --no-cache"
   },
+  "engines": {
+    "node": "10.8.0"
+  },
   "author": "mahaker",
   "license": "ISC",
   "devDependencies": {
