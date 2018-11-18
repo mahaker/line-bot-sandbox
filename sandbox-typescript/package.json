@@ -7,7 +7,7 @@
     "start": "node ./dist/bundle.js",
     "build": "webpack",
     "clean": "rm -rf ./dist",
-    "lint": "tslint ./src/**/*.ts",
+    "lint": "tslint ./src/*",
     "test": "jest --no-cache"
   },
   "author": "mahaker",
