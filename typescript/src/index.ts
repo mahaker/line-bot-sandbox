@@ -1,5 +1,5 @@
 import Express, { Request, Response } from 'express';
-import { Client, middleware, ClientConfig, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
+import { Client, middleware, ClientConfig, MiddlewareConfig, WebhookEvent, TextMessage } from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -31,11 +31,13 @@ function handleEvent(event: WebhookEvent) {
     if (event.type !== 'message' || event.message.type !== 'text') {
         return Promise.resolve(null);
     }
-  
-    return botClient.replyMessage(event.replyToken, {
+
+    const message: TextMessage = {
         type: 'text',
         text: event.message.text,
-    });
+    }
+  
+    return botClient.replyMessage(event.replyToken, message);
 }
 
 const port: any = process.env.PORT || 8888;
