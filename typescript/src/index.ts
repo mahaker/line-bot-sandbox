@@ -1,5 +1,6 @@
 import Express, { Request, Response } from 'express';
 import { Client, middleware, ClientConfig, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
+import Slideshare from './Slideshare';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -11,6 +12,12 @@ const botClient = new Client(clientConfig);
 const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
+
+const slideshare = new Slideshare();
+slideshare.search('yattom')
+    .then(slides => {
+        console.log(`Slides ${slides}`);
+    });
 
 app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
