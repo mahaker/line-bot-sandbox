@@ -2,7 +2,7 @@ import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
     ClientConfig, MiddlewareConfig, 
-    WebhookEvent, TextMessage, TemplateMessage, TemplateConfirm, Action } from '@line/bot-sdk';
+    WebhookEvent, TemplateMessage, TemplateConfirm, Action } from '@line/bot-sdk';
 import Slideshare from './Slideshare';
 
 const clientConfig: ClientConfig = {
@@ -19,7 +19,8 @@ const app = Express();
 const slideshare = new Slideshare();
 slideshare.search('yattom')
     .then(slides => {
-        console.log(`Slides ${slides}`);
+        console.log('Slideshows');
+        console.log(slides);
     });
 
 app.get('/', (request: Request, response: Response) => {

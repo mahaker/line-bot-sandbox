@@ -2,6 +2,7 @@ import { Hash } from 'crypto';
 import * as crypto from 'crypto';
 import { RequestOptions } from 'https';
 import * as https from "https";
+import parser from 'xml2json';
 
 export default class Slideshare {
     private readonly API_KEY: string = '';
@@ -27,8 +28,9 @@ export default class Slideshare {
                     body += chunk;
                 });
                 response.on('end', ()=>{
-                    // TODO: XML string convert to Object
-                    resolve(body);
+                    const xml = parser.toJson(body);
+                    const parsed = JSON.parse(xml);
+                    resolve(parsed);
                 });
             }).on('error', (err)=>{
                 console.log('error:', err.stack);
