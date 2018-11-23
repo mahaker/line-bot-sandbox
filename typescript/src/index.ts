@@ -16,12 +16,11 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-const slideshare = new Slideshare();
-slideshare.search('yattom')
-    .then(slides => {
-        console.log('Slideshows');
-        console.log(slides);
-    });
+(async () => {
+    const slideshare = new Slideshare();
+    const str = await slideshare.search('line');
+    // console.log(str);
+})(); 
 
 app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
