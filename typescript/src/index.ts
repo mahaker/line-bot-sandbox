@@ -1,5 +1,8 @@
 import Express, { Request, Response } from 'express';
-import { Client, middleware, ClientConfig, MiddlewareConfig, WebhookEvent } from '@line/bot-sdk';
+import { 
+    Client, middleware, 
+    ClientConfig, MiddlewareConfig, 
+    WebhookEvent, TextMessage, TemplateMessage, TemplateConfirm, Action } from '@line/bot-sdk';
 import Slideshare from './Slideshare';
 
 const clientConfig: ClientConfig = {
@@ -24,7 +27,6 @@ app.get('/', (request: Request, response: Response) => {
 });
 
 app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
-    console.log('/webhook');
     Promise
         .all(request.body.events.map(handleEvent))
         .then((result) => response.json(result))
@@ -34,15 +36,34 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
         });
 });
 
-function handleEvent(event: WebhookEvent) {
-    if (event.type !== 'message' || event.message.type !== 'text') {
-        return Promise.resolve(null);
+function handleEvent(event: WebhookEvent): Promise<any> {
+    const userId: string | undefined = event.source.userId;
+
+    const messageActions: Action[] = [
+        {
+            type: 'message',
+            label: 'yes',
+            text: 'text1',
+        },
+        {
+            type: 'message',
+            label: 'no',
+            text: 'text2',
+        },
+    ];
+
+    const templateConfirm: TemplateConfirm = {
+        type: 'confirm',
+        text: 'Please confirm.',
+        actions: messageActions, 
+    }; 
+
+    const message: TemplateMessage = {
+        type: 'template',
+        altText: 'template message alt',
+        template: templateConfirm,
     }
-  
-    return botClient.replyMessage(event.replyToken, {
-        type: 'text',
-        text: event.message.text,
-    });
+    return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
 }
 
 const port: any = process.env.PORT || 8888;
