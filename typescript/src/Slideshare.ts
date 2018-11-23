@@ -5,8 +5,8 @@ import * as https from "https";
 import parser from 'xml2json';
 
 export default class Slideshare {
-    private readonly API_KEY: string = '';
-    private readonly SHARED_SECRET: string = '';
+    private readonly API_KEY: string = 'Lg55DFM1';
+    private readonly SHARED_SECRET: string = '0x4QwVYu';
 
     public async search(str: string): Promise<any> {
         const hash: Hash = crypto.createHash('sha1');
