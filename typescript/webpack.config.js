@@ -6,6 +6,7 @@ module.exports = {
     entry: "./src/index.ts",
     target: 'node',
     module: {
+      exprContextCritical: false,
       rules: [
         {
           test: /\.ts?$/,
