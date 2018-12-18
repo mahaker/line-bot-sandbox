@@ -5,7 +5,7 @@ export default class Kani implements Provider {
     type: string = 'かに'; // リッチメニューのテキスト（押下すると投稿される文字列）に合わせる必要がある。
     private index: number = 0;
     private readonly quizzes: Quiz[] = [
-        new Quiz(1, '越前がには一年中とってよい', false)
+        new Quiz(1, '越前がには一年中とってよい', false),
     ];
 
     getQuizByNo(no: number): Quiz | undefined {

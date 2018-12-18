@@ -48,14 +48,19 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
         const data = JSON.parse(_event.postback.data);
         const quizNo: number = data.no;
         const selectedAnswer: boolean = data.answer;
-
+        
+        // TODO immutableにしたい
+        const textMessage: TextMessage = {
+            type: 'text',
+            text: ''
+        }
         const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
         if(!!_kani && _kani.isCorrect(quizNo, selectedAnswer)) {
-            console.log('正解！！');
+            textMessage.text = '正解！！';
         } else {
-            console.log('不正解！！');
+            textMessage.text = '不正解！！';
         }
-        return Promise.resolve(null);
+        return !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
     } else {
         // クイズそのものを返す。
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
