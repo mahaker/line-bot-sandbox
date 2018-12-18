@@ -2,7 +2,7 @@ import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
     ClientConfig, MiddlewareConfig, 
-    WebhookEvent, TemplateMessage, TemplateConfirm, Action } from '@line/bot-sdk';
+    WebhookEvent, TemplateMessage, TemplateConfirm, TextMessage, Action } from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -30,6 +30,9 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: WebhookEvent): Promise<any> {
+    if (event.type !== 'message' || event.message.type !== 'text') {
+        return Promise.resolve(null);
+    }
     const userId: string | undefined = event.source.userId;
 
     const messageActions: Action[] = [
@@ -56,6 +59,13 @@ function handleEvent(event: WebhookEvent): Promise<any> {
         altText: 'template message alt',
         template: templateConfirm,
     }
+    
+    const textMessage: TextMessage = {
+        type: 'text',
+        text: `${event.message.text}クイズ！`
+    }
+
+    !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
     return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
 }
 
