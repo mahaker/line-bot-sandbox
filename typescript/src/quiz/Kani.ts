@@ -7,6 +7,10 @@ export default class Kani implements QType {
         new Quiz(1, '越前がには一年中とってよい', false)
     ];
 
+    getQuizByNo(no: number): Quiz | undefined {
+        return this.quizzes.find(q => q.getNo() === no);
+    }
+
     hasNext(): boolean {
         return this.quizzes.length - 1 === this.index;
     }

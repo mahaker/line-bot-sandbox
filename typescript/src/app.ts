@@ -19,6 +19,7 @@ const botClient = new Client(clientConfig);
 const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
+const kani = new Kani();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -42,9 +43,17 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
 
     if(event.type === 'postback') {
         const _event: PostbackEvent = event as PostbackEvent;
-        console.log('ポストバック!');
         const data = JSON.parse(_event.postback.data);
-        console.log(`no=${data.no}, answer=${data.answer}, ${typeof data.answer}`);
+
+        const quizNo: number = data.number;
+        const selectedAnswer: boolean = data.answer;
+        const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
+
+        if(!!_kani && _kani.isCorrect(quizNo, selectedAnswer)) {
+            console.log('正解！！');
+        } else {
+            console.log('不正解！！');
+        }
         return Promise.resolve(null);
     } else {
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
@@ -55,7 +64,6 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
             text: `${m.text}クイズ！`
         }
 
-        const kani = new Kani();
 
         if(!!userId && kani.hasNext()) {
             const message: TemplateMessage = buildForm(kani.next());
@@ -73,13 +81,13 @@ function buildForm(q: Quiz): TemplateMessage {
             type: 'postback',
             label: 'yes',
             displayText: 'yes',
-            data: `{"no": ${q.getNo()}, "answer": true}`,
+            data: `${JSON.stringify({"no": q.getNo(), "answer": true})}`,
         },
         {
             type: 'postback',
             label: 'no',
             displayText: 'no',
-            data: `{"no": ${q.getNo()}, "answer": false}`,
+            data: `${JSON.stringify({"no": q.getNo(), "answer": false})}`,
         },
     ];
 
