@@ -41,7 +41,10 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     console.log('handleEvent');
 
     if(event.type === 'postback') {
+        const _event: PostbackEvent = event as PostbackEvent;
         console.log('ポストバック!');
+        const data = _event.postback.data.split(',');
+        console.log(`no=${data[0]}, answer=${data[1]}, ${typeof data[1]}`);
         return Promise.resolve(null);
     } else {
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
