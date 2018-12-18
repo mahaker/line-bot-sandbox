@@ -43,7 +43,7 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
         const _event: PostbackEvent = event as PostbackEvent;
         const data = JSON.parse(_event.postback.data);
 
-        const quizNo: number = data.number;
+        const quizNo: number = data.no;
         const selectedAnswer: boolean = data.answer;
 
         const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
