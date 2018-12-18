@@ -20,6 +20,11 @@ app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
 });
 
+app.get('/hoge', (request: Request, response: Response) => {
+    console.log(request.query.no);
+    return response.send('hoge');
+});
+
 app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
     Promise
         .all(request.body.events.map(handleEvent))
@@ -38,9 +43,9 @@ function handleEvent(event: WebhookEvent): Promise<any> {
 
     const messageActions: Action[] = [
         {
-            type: 'message',
+            type: 'uri',
             label: 'yes',
-            text: 'text1',
+            uri: `${process.env.APP_DOMAIN}?no=1`,
         },
         {
             type: 'message',
