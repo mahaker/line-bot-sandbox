@@ -81,7 +81,7 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
 }
 
 function isValidProviderType(providerType: string): boolean {
-    return quizProviders.find(p => p.type === providerType) === undefined;
+    return quizProviders.find(p => p.type === providerType) !== undefined;
 }
 
 function buildForm(q: Quiz): TemplateMessage {
