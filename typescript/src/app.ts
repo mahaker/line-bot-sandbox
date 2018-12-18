@@ -2,7 +2,7 @@ import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
     ClientConfig, MiddlewareConfig, 
-    WebhookEvent, TemplateMessage, TemplateConfirm, TextMessage, Action } from '@line/bot-sdk';
+    WebhookEvent, TemplateMessage, TemplateConfirm, TextMessage, Action, PostbackAction } from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -16,6 +16,7 @@ const botMiddleware = middleware(middlewareConfig);
 const app = Express();
 
 app.get('/', (request: Request, response: Response) => {
+    console.log(process.env.HEROKU_APP_NAME);
     return response.send('Hello mahaker!!');
 });
 
