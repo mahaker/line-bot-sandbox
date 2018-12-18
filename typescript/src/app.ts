@@ -43,8 +43,8 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     if(event.type === 'postback') {
         const _event: PostbackEvent = event as PostbackEvent;
         console.log('ポストバック!');
-        const data = _event.postback.data.split(',');
-        console.log(`no=${data[0]}, answer=${data[1]}, ${typeof data[1]}`);
+        const data = JSON.parse(_event.postback.data);
+        console.log(`no=${data.no}, answer=${data.answer}, ${typeof data.answer}`);
         return Promise.resolve(null);
     } else {
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
@@ -73,13 +73,13 @@ function buildForm(q: Quiz): TemplateMessage {
             type: 'postback',
             label: 'yes',
             displayText: 'yes',
-            data: `no=${q.getNo},answer=true`,
+            data: `{no: ${q.getNo()}, answer: true}`,
         },
         {
             type: 'postback',
             label: 'no',
             displayText: 'no',
-            data: `no=${q.getNo},answer=false`,
+            data: `{no: ${q.getNo()}, answer: false}`,
         },
     ];
 
