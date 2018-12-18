@@ -38,6 +38,8 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
+    console.log('handleEvent');
+
     if(event.type === 'postback') {
         console.log('ポストバック!');
         return Promise.resolve(null);
