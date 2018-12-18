@@ -69,13 +69,13 @@ function buildForm(q: Quiz): TemplateMessage {
         {
             type: 'postback',
             label: 'yes',
-            text: 'yes',
+            displayText: 'yes',
             data: `no=${q.getNo},answer=true`,
         },
         {
             type: 'postback',
             label: 'no',
-            text: 'no',
+            displayText: 'no',
             data: `no=${q.getNo},answer=false`,
         },
     ];
