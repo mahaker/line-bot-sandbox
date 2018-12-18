@@ -39,16 +39,20 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
-    console.log('handleEvent');
-
     if(event.type === 'postback') {
         const _event: PostbackEvent = event as PostbackEvent;
         const data = JSON.parse(_event.postback.data);
 
         const quizNo: number = data.number;
         const selectedAnswer: boolean = data.answer;
+
         const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
 
+        console.log(quizNo);
+        console.log(selectedAnswer);
+        console.log(_kani);
+        console.log(!!_kani);
+        console.log(!!_kani && _kani.isCorrect(quizNo, selectedAnswer));
         if(!!_kani && _kani.isCorrect(quizNo, selectedAnswer)) {
             console.log('正解！！');
         } else {
@@ -63,7 +67,6 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
             type: 'text',
             text: `${m.text}クイズ！`
         }
-
 
         if(!!userId && kani.hasNext()) {
             const message: TemplateMessage = buildForm(kani.next());
