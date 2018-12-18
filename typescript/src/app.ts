@@ -16,8 +16,7 @@ const botMiddleware = middleware(middlewareConfig);
 const app = Express();
 
 app.get('/', (request: Request, response: Response) => {
-    console.log(process.env.HEROKU_APP_NAME);
-    console.log(process.env.HEROKU_PARENT_APP_NAME);
+    console.log(process.env.APP_DOMAIN);
     return response.send('Hello mahaker!!');
 });
 
