@@ -1,8 +1,8 @@
 import Express, { Request, Response } from 'express';
-import {
-    Client, ClientConfig,
-    middleware, MiddlewareConfig,
-    WebhookEvent} from '@line/bot-sdk';
+import { 
+    Client, middleware, 
+    ClientConfig, MiddlewareConfig, 
+    WebhookEvent, TemplateMessage, TemplateConfirm, Action } from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -30,14 +30,33 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: WebhookEvent): Promise<any> {
-    if (event.type !== 'message' || event.message.type !== 'text') {
-        return Promise.resolve(null);
-    }
+    const userId: string | undefined = event.source.userId;
 
-    return botClient.replyMessage(event.replyToken, {
-        type: 'text',
-        text: `${event.message.text}クイズ！`,
-    });
+    const messageActions: Action[] = [
+        {
+            type: 'message',
+            label: 'yes',
+            text: 'text1',
+        },
+        {
+            type: 'message',
+            label: 'no',
+            text: 'text2',
+        },
+    ];
+
+    const templateConfirm: TemplateConfirm = {
+        type: 'confirm',
+        text: 'Please confirm.',
+        actions: messageActions, 
+    }; 
+
+    const message: TemplateMessage = {
+        type: 'template',
+        altText: 'template message alt',
+        template: templateConfirm,
+    }
+    return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
 }
 
 export default app;
