@@ -7,7 +7,6 @@ import {
     ClientConfig, MiddlewareConfig, 
     MessageEvent, PostbackEvent,
     TemplateMessage, TemplateConfirm, TextMessage, Action, TextEventMessage} from '@line/bot-sdk';
-import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
 // TODO 環境変数で指定したい。
 const clientConfig: ClientConfig = {
