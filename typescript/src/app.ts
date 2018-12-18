@@ -3,6 +3,7 @@ import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Eiheiji from './quiz/Eiheiji';
 import Tojinbou from './quiz/Tojinbou';
+import Matsunami from './quiz/Matsunami';
 import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
@@ -23,7 +24,12 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 let quizProvider: Provider = new Kani();
-const quizProviders: Provider[] = [new Kani(), new Eiheiji(), new Tojinbou()];
+const quizProviders: Provider[] = [
+    new Kani(),
+    new Eiheiji(),
+    new Tojinbou(),
+    new Matsunami(),
+];
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -83,6 +89,9 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                     break;
                 case('東尋坊'):
                     quizProvider = new Tojinbou();
+                    break;
+                case('まつなみ'):
+                    quizProvider = new Matsunami();
                     break;
             }
 
