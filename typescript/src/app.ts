@@ -16,13 +16,7 @@ const botMiddleware = middleware(middlewareConfig);
 const app = Express();
 
 app.get('/', (request: Request, response: Response) => {
-    console.log(process.env.APP_DOMAIN);
     return response.send('Hello mahaker!!');
-});
-
-app.get('/hoge', (request: Request, response: Response) => {
-    console.log(request.query.no);
-    return response.send('hoge');
 });
 
 app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
@@ -43,9 +37,9 @@ function handleEvent(event: WebhookEvent): Promise<any> {
 
     const messageActions: Action[] = [
         {
-            type: 'uri',
+            type: 'message',
             label: 'yes',
-            uri: `${process.env.APP_DOMAIN}?no=1`,
+            text: 'text1',
         },
         {
             type: 'message',
