@@ -2,7 +2,7 @@ import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
     ClientConfig, MiddlewareConfig, 
-    WebhookEvent, TemplateMessage, TemplateConfirm, TextMessage, Action, PostbackAction } from '@line/bot-sdk';
+    WebhookEvent, MessageEvent, TemplateMessage, TemplateConfirm, TextMessage, Action, TextEventMessage} from '@line/bot-sdk';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
@@ -30,43 +30,52 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: WebhookEvent): Promise<any> {
-    if (event.type !== 'message' || event.message.type !== 'text') {
-        return Promise.resolve(null);
-    }
     const userId: string | undefined = event.source.userId;
 
-    const messageActions: Action[] = [
-        {
-            type: 'message',
-            label: 'yes',
-            text: 'text1',
-        },
-        {
-            type: 'message',
-            label: 'no',
-            text: 'text2',
-        },
-    ];
+    if(event.type === 'postback') {
+        const textMessage: TextMessage = {
+            type: 'text',
+            text: 'ポストバックイベント！' 
+        }
+        return !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+    } else {
+        const e: MessageEvent = event as MessageEvent;
+        const m: TextEventMessage = e.message as TextEventMessage;
+        const messageActions: Action[] = [
+            {
+                type: 'postback',
+                label: 'yes',
+                text: 'yes',
+                data: 'yes',
+            },
+            {
+                type: 'postback',
+                label: 'no',
+                text: 'no',
+                 data: 'no',
+            },
+        ];
 
-    const templateConfirm: TemplateConfirm = {
-        type: 'confirm',
-        text: 'Please confirm.',
-        actions: messageActions, 
-    }; 
+        const templateConfirm: TemplateConfirm = {
+            type: 'confirm',
+            text: 'Please confirm.',
+            actions: messageActions, 
+        }; 
 
-    const message: TemplateMessage = {
-        type: 'template',
-        altText: 'template message alt',
-        template: templateConfirm,
-    }
+        const message: TemplateMessage = {
+            type: 'template',
+            altText: 'template message alt',
+            template: templateConfirm,
+        }
     
-    const textMessage: TextMessage = {
-        type: 'text',
-        text: `${event.message.text}クイズ！`
-    }
+        const textMessage: TextMessage = {
+            type: 'text',
+            text: `${m.text}クイズ！`
+        }
 
-    !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
-    return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
+        !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+        return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
+    }
 }
 
 export default app;
