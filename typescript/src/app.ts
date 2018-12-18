@@ -1,11 +1,13 @@
+import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
     ClientConfig, MiddlewareConfig, 
-    WebhookEvent, MessageEvent, PostbackEvent,
+    MessageEvent, PostbackEvent,
     TemplateMessage, TemplateConfirm, TextMessage, Action, TextEventMessage} from '@line/bot-sdk';
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
 // TODO 環境変数で指定したい。
 const clientConfig: ClientConfig = {
@@ -20,6 +22,7 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 const kani = new Kani();
+const quizProviders: Provider[] = [new Kani()];
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -40,19 +43,13 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
     if(event.type === 'postback') {
+        // クイズの回答を検証する。
         const _event: PostbackEvent = event as PostbackEvent;
         const data = JSON.parse(_event.postback.data);
-
         const quizNo: number = data.no;
         const selectedAnswer: boolean = data.answer;
 
         const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
-
-        console.log(quizNo);
-        console.log(selectedAnswer);
-        console.log(_kani);
-        console.log(!!_kani);
-        console.log(!!_kani && _kani.isCorrect(quizNo, selectedAnswer));
         if(!!_kani && _kani.isCorrect(quizNo, selectedAnswer)) {
             console.log('正解！！');
         } else {
@@ -60,22 +57,31 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
         }
         return Promise.resolve(null);
     } else {
+        // クイズそのものを返す。
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
         const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
-        const textMessage: TextMessage = {
-            type: 'text',
-            text: `${m.text}クイズ！`
-        }
+        if(isValidProviderType(m.text)) {
+            const textMessage: TextMessage = {
+                type: 'text',
+                text: `${m.text}クイズ！`
+            }
 
-        if(!!userId && kani.hasNext()) {
-            const message: TemplateMessage = buildForm(kani.next());
-            botClient.pushMessage(userId, textMessage);
-            return botClient.pushMessage(userId, message);
+            if(!!userId && kani.hasNext()) {
+                const message: TemplateMessage = buildForm(kani.next());
+                botClient.pushMessage(userId, textMessage);
+                return botClient.pushMessage(userId, message);
+            } else {
+                return Promise.resolve(null);
+            }
         } else {
             return Promise.resolve(null);
         }
     }
+}
+
+function isValidProviderType(providerType: string): boolean {
+    return quizProviders.find(p => p.type === providerType) === undefined;
 }
 
 function buildForm(q: Quiz): TemplateMessage {
