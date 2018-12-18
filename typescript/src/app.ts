@@ -1,6 +1,7 @@
 import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
+import Eiheiji from './quiz/Eiheiji';
 import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
@@ -20,8 +21,8 @@ const botClient = new Client(clientConfig);
 const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
-const kani = new Kani();
-const quizProviders: Provider[] = [new Kani()];
+let quizProvider: Provider = new Kani();
+const quizProviders: Provider[] = [new Kani(), new Eiheiji()];
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -53,8 +54,8 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
             type: 'text',
             text: ''
         }
-        const _kani: Quiz | undefined = kani.getQuizByNo(quizNo);
-        if(!!_kani && _kani.isCorrect(quizNo, selectedAnswer)) {
+        const _quizProvider: Quiz | undefined = quizProvider.getQuizByNo(quizNo);
+        if(!!_quizProvider && _quizProvider.isCorrect(quizNo, selectedAnswer)) {
             textMessage.text = '正解！！';
         } else {
             textMessage.text = '不正解！！';
@@ -71,8 +72,18 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                 text: `${m.text}クイズ！`
             }
 
-            if(!!userId && kani.hasNext()) {
-                const message: TemplateMessage = buildForm(kani.next());
+            // クイズを設定
+            switch(m.text) {
+                case('かに'): 
+                    quizProvider = new Kani();
+                    break;
+                case('永平寺'):
+                    quizProvider = new Eiheiji();
+                    break;
+            }
+
+            if(!!userId && quizProvider.hasNext()) {
+                const message: TemplateMessage = buildForm(quizProvider.next());
                 botClient.pushMessage(userId, textMessage);
                 return botClient.pushMessage(userId, message);
             } else {
