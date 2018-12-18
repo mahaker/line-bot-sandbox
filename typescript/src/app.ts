@@ -1,3 +1,5 @@
+import Quiz from './quiz/Quiz';
+import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
@@ -18,7 +20,7 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-// 不要なコントローラー（サーバー起動の動作確認のため）
+// 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
 });
@@ -37,51 +39,57 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
     if(event.type === 'postback') {
-        const textMessage: TextMessage = {
-            type: 'text',
-            text: 'ポストバックイベント！' 
-        }
-        return !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+        console.log('ポストバック!');
+        return Promise.resolve(null);
     } else {
-        // TODO なんとかしたい
-        const e: MessageEvent = event as MessageEvent;
-        const m: TextEventMessage = e.message as TextEventMessage;
-        const messageActions: Action[] = [
-            {
-                type: 'postback',
-                label: 'yes',
-                text: 'yes',
-                data: 'yes',
-            },
-            {
-                type: 'postback',
-                label: 'no',
-                text: 'no',
-                 data: 'no',
-            },
-        ];
-
-        const templateConfirm: TemplateConfirm = {
-            type: 'confirm',
-            text: 'Please confirm.',
-            actions: messageActions, 
-        }; 
-
-        const message: TemplateMessage = {
-            type: 'template',
-            altText: 'template message alt',
-            template: templateConfirm,
-        }
+        const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
+        const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
         const textMessage: TextMessage = {
             type: 'text',
             text: `${m.text}クイズ！`
         }
 
-        // TODO ifでまとめる
-        !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
-        return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
+        const kani = new Kani();
+
+        if(!!userId && kani.hasNext()) {
+            const message: TemplateMessage = buildForm(kani.next());
+            botClient.pushMessage(userId, textMessage);
+            return botClient.pushMessage(userId, message);
+        } else {
+            return Promise.resolve(null);
+        }
     }
+}
+
+function buildForm(q: Quiz): TemplateMessage {
+    const messageActions: Action[] = [
+        {
+            type: 'postback',
+            label: 'yes',
+            text: 'yes',
+            data: `no=${q.getNo},answer=true`,
+        },
+        {
+            type: 'postback',
+            label: 'no',
+            text: 'no',
+            data: `no=${q.getNo},answer=false`,
+        },
+    ];
+
+    const templateConfirm: TemplateConfirm = {
+        type: 'confirm',
+        text: q.getText(),
+        actions: messageActions, 
+    }; 
+
+    const message: TemplateMessage = {
+        type: 'template',
+        altText: 'confirm message',
+        template: templateConfirm,
+    }
+    return message;
 }
 
 export default app;
