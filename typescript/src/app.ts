@@ -26,6 +26,9 @@ const app = Express();
 
 const CMD_MARU = 'まる！';
 const CMD_BATSU = 'ばつ！';
+const CMD_RESTART = 'restart';
+const CMD_DETAIL = 'detail';
+const CMD_NEXT = 'next';
 const quizProvider: Provider = new Kani();
 let currentQuiz: Quiz = quizProvider.next();
 
@@ -55,18 +58,34 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
 }
 
 // リッチメニュー上からのアクション
-function handleRichMenuAction(event: PostbackEvent): Promise<any> {
+async function handleRichMenuAction(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
+
     if(data.cmd === 'answer') {
         console.log(data.answer);
         const textMessage = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
         return !!userId? botClient.pushMessage(userId, buildText(textMessage)) : Promise.resolve(null);
     } else if(data.cmd === 'ctrl') {
         console.log(data.action);
-        return Promise.resolve(null);
-    } else {
-        return Promise.resolve(null);
+        switch(data.cmd) {
+            case(CMD_RESTART):
+                if(!!userId) {
+                    currentQuiz = quizProvider.init();
+                    const message: FlexMessage = buildForm(currentQuiz);
+                    await botClient.pushMessage(userId, message);
+                }
+                break;
+            case(CMD_DETAIL):
+                break;
+            case(CMD_NEXT):
+                if(!!userId) {
+                    currentQuiz = quizProvider.hasNext()? quizProvider.next() : currentQuiz;
+                    const message: FlexMessage = buildForm(currentQuiz);
+                    await botClient.pushMessage(userId, message);
+                }
+                break;
+        }
     }
 }
 
