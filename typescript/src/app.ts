@@ -70,7 +70,8 @@ async function handleRichMenuAction(event: PostbackEvent) {
         switch(data.action) {
             case(CMD_RESTART):
                 if(!!userId) {
-                    currentQuiz = quizProvider.init();
+                    quizProvider.init();
+                    currentQuiz = quizProvider.next();
                     const message: FlexMessage = buildForm(currentQuiz);
                     await botClient.pushMessage(userId, message);
                 }
