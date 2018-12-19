@@ -16,7 +16,11 @@ $ cd typescript && heroku create [app-name]
 
 # Add heroku-buildpack-monorepo and settings
 $ heroku buildpacks:add -a [app-name] https://github.com/lstoll/heroku-buildpack-monorepo
-$ heroku config:add APP_BASE=typescript -a [app-name]
+$ heroku config:set APP_BASE=typescript -a [app-name]
+
+# Add LINE Bot credentials
+$ heroku config:set LINE_CHANNEL_ACCESS_TOKEN=[Your ChannelAccessToken] -a [app-name]
+$ heroku config:set LINE_CHANNEL_SECRET=[Your ChannelSecret] -a [app-name]
 
 # Add heroku/nodejs buildpack
 $ heroku buildpacks:add heroku/nodejs

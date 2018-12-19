@@ -11,12 +11,12 @@ import {
     MessageEvent, PostbackEvent,
     TemplateMessage, TemplateConfirm, TextMessage, Action, TextEventMessage} from '@line/bot-sdk';
 
-// TODO 環境変数で指定したい。
+// TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
-    channelAccessToken: 'ARwyenJOtWdAY/mKwItsp2eVHc5DLkBxUashhLOeRdkwQBTooRuMu+EBckCkRTZ8xWM30x3/U7TSUgqHZ3YO+RicTcBPoos/OKSAHBQzzxpzxRVZ03lddNJ1viCqq0G77N9CRZbYm62wPnO7YbNpCgdB04t89/1O/w1cDnyilFU=',
+    channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || '',
 };
 const middlewareConfig: MiddlewareConfig = {
-    channelSecret: 'ef08dab5f407bd5e324c989267c8ecc1',
+    channelSecret: process.env.LINE_CHANNEL_SECRET || '',
 };
 
 const botClient = new Client(clientConfig);
