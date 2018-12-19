@@ -10,7 +10,7 @@ export default class Q {
     getAnswer(): boolean {
         return this.answer;
     }
-    isCorrect(no: number, answer: boolean): boolean {
-        return this.no === no && this.answer === answer;
+    isCorrect(answer: boolean): boolean {
+        return this.answer === answer;
     }
 }

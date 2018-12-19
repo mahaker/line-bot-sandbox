@@ -48,7 +48,20 @@ function handleEvent(event: MessageEvent): Promise<any> {
     const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
     const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
-    if(!isAnswerText(m.text) && !!userId) {
+    if(isAnswerText(m.text) && !!userId) {
+        let textMessage: TextMessage | undefined = undefined;
+        switch(m.text) {
+            case(CMD_MARU):
+                currentQuiz.isCorrect(true);
+                textMessage = buildText('せいかい!');
+                break;
+            case(CMD_BATSU):
+                currentQuiz.isCorrect(false);
+                textMessage = buildText('はずれ!');
+                break;
+        }
+        return !!textMessage? botClient.pushMessage(userId, textMessage) : Promise.resolve(null); 
+    } else if(!isAnswerText(m.text) && !!userId) {
         const message: FlexMessage = buildForm(currentQuiz);
         return botClient.pushMessage(userId, message);
     } else {
@@ -59,6 +72,13 @@ function handleEvent(event: MessageEvent): Promise<any> {
 // 「回答」を入力されていればtrue
 function isAnswerText(txt: string): boolean {
     return txt === CMD_MARU || txt === CMD_BATSU;
+}
+
+function buildText(t: string): TextMessage {
+    return {
+        type: 'text',
+        text: t,
+    };
 }
 
 function buildForm(q: Quiz): FlexMessage {
