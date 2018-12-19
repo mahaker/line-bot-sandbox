@@ -86,18 +86,6 @@ function buildText(t: string): TextMessage {
 }
 
 function buildForm(q: Quiz): FlexMessage {
-    const flexBodyContents: FlexText = {
-        type: 'text',
-        text: q.getText(),
-        size: 'md',
-        align: 'start',
-    }
-    const flexBody: FlexBox = {
-        type: 'box',
-        layout: 'horizontal',
-        spacing: 'md',
-        contents: [flexBodyContents],
-    }
     const flexHeaderContents: FlexText = {
         type: 'text',
         text: `問題${q.getNo()}`,
@@ -109,6 +97,19 @@ function buildForm(q: Quiz): FlexMessage {
         type: 'box',
         layout: 'horizontal',
         contents: [flexHeaderContents],
+    }
+    const flexBodyContents: FlexText = {
+        type: 'text',
+        text: q.getText(),
+        size: 'md',
+        align: 'start',
+        wrap: true,
+    }
+    const flexBody: FlexBox = {
+        type: 'box',
+        layout: 'horizontal',
+        spacing: 'md',
+        contents: [flexBodyContents],
     }
     const flexContents: FlexBubble = {
         type: 'bubble',
