@@ -5,8 +5,7 @@ import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, ClientConfig, MiddlewareConfig, 
     MessageEvent,
-    TextMessage, TextEventMessage,
-    PostbackEvent,
+    TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
 
