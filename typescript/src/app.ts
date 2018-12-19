@@ -60,7 +60,11 @@ function handleEvent(event: MessageEvent): Promise<any> {
                 textMessage = buildText('はずれ!');
                 break;
         }
-        return !!textMessage? botClient.pushMessage(userId, textMessage) : Promise.resolve(null); 
+        quizProvider.hasNext()? currentQuiz = quizProvider.next() : currentQuiz;
+        return !!textMessage? botClient.pushMessage(userId, textMessage).then(() => {
+            const message: FlexMessage = buildForm(currentQuiz);
+            botClient.pushMessage(userId, message);
+        }) : Promise.resolve(null); 
     } else if(!isAnswerText(m.text) && !!userId) {
         const message: FlexMessage = buildForm(currentQuiz);
         return botClient.pushMessage(userId, message);
