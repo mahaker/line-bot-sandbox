@@ -34,7 +34,7 @@ $ git push heroku master
 
 ``` sh
 $ git clone git@github.com:mahaker/line-bot-sandbox.git
-$ cd sandbox-typescript
+$ cd typescript
 $ npm install
 $ npm run start 
 ```
