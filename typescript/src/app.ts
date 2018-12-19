@@ -48,7 +48,7 @@ function handleEvent(event: MessageEvent): Promise<any> {
     const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
     const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
-    if(isValidProviderType(m.text) && !!userId) {
+    if(isAnswerText(m.text) && !!userId) {
         const message: FlexMessage = buildForm(currentQuiz);
         return botClient.pushMessage(userId, message);
     } else {
@@ -56,10 +56,9 @@ function handleEvent(event: MessageEvent): Promise<any> {
     }
 }
 
-function isValidProviderType(providerType: string): boolean {
-    // return quizProvider.type === providerType;
-    // TODO あとで判定ロジック入れる
-    return true;
+// 「回答」を入力されていればtrue
+function isAnswerText(txt: string): boolean {
+    return txt === CMD_MARU || txt === CMD_BATSU;
 }
 
 function buildForm(q: Quiz): FlexMessage {
@@ -77,7 +76,7 @@ function buildForm(q: Quiz): FlexMessage {
     }
     const flexHeaderContents: FlexText = {
         type: 'text',
-        text: `問題${q.getNo()}!`,
+        text: `問題${q.getNo()}`,
         size: 'lg',
         align: 'center',
         weight: 'bold',
