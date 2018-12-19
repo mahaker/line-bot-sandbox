@@ -46,8 +46,10 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     if(event.type === 'postback') {
         return handleRichMenuAction(event);
-    } else {
+    } else if(event.type === 'message') {
         return pushQuiz(event);
+    } else {
+        return Promise.resolve(null);
     }
 }
 
