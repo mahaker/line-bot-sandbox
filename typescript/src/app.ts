@@ -65,7 +65,7 @@ function isValidProviderType(providerType: string): boolean {
 function buildForm(q: Quiz): FlexMessage {
     const flexBodyContents: FlexText = {
         type: 'text',
-        text: '質問',
+        text: q.getText(),
         size: 'md',
         align: 'start',
     }
@@ -77,7 +77,7 @@ function buildForm(q: Quiz): FlexMessage {
     }
     const flexHeaderContents: FlexText = {
         type: 'text',
-        text: '問題',
+        text: `問題${q.getNo()}!`,
         size: 'lg',
         align: 'center',
         weight: 'bold',
