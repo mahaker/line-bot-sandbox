@@ -60,11 +60,9 @@ async function handleRichMenuAction(event: PostbackEvent) {
     const data = JSON.parse(event.postback.data);
 
     if(data.cmd === 'answer') {
-        console.log(data.answer);
         const textMessage = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
         if(!!userId) await botClient.pushMessage(userId, buildText(textMessage));
     } else if(data.cmd === 'ctrl') {
-        console.log(data.action);
         switch(data.action) {
             case(CMD_RESTART):
                 if(!!userId) {
@@ -90,25 +88,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
 // 普通のテキスト入力
 async function pushQuiz(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
-
-    const m: TextEventMessage = event.message as TextEventMessage;
-    
-    if(isAnswerText(m.text) && !!userId) {
-        let textMessage: TextMessage | undefined = undefined;
-        switch(m.text) {
-            case(CMD_MARU):
-                currentQuiz.isCorrect(true);
-                textMessage = buildText('せいかい!');
-                break;
-            case(CMD_BATSU):
-                currentQuiz.isCorrect(false);
-                textMessage = buildText('はずれ!');
-                break;
-        }
-        quizProvider.hasNext()? currentQuiz = quizProvider.next() : currentQuiz;
-        if(!!textMessage) await botClient.pushMessage(userId, textMessage);
-        await botClient.pushMessage(userId, buildForm(currentQuiz));
-    } else if(!isAnswerText(m.text) && !!userId) {
+    if(!!userId) {
         await botClient.pushMessage(userId, buildForm(currentQuiz));
     }
 }
