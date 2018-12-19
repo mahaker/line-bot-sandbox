@@ -68,8 +68,8 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                 text: 'クイズは終了です！' 
             }
             !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+            quiz = quizProvider.init();
         }
-        quizProvider.init();
         return Promise.resolve(null);
     } else {
         // クイズそのものを返す。
