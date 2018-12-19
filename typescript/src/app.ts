@@ -22,8 +22,8 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-const CMD_MARU = 'まる！！';
-const CMD_BATSU = 'ばつ！！';
+const CMD_MARU = 'まる！';
+const CMD_BATSU = 'ばつ！';
 const quizProvider: Provider = new Kani();
 let currentQuiz: Quiz = quizProvider.next();
 
@@ -48,7 +48,7 @@ function handleEvent(event: MessageEvent): Promise<any> {
     const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
     const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
-    if(isAnswerText(m.text) && !!userId) {
+    if(!isAnswerText(m.text) && !!userId) {
         const message: FlexMessage = buildForm(currentQuiz);
         return botClient.pushMessage(userId, message);
     } else {
