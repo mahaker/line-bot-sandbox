@@ -85,6 +85,7 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                 text: `${m.text}クイズ！`
             }
 
+            quiz = quizProvider.init();
             if(!!userId) {
                 const message: TemplateMessage = buildForm(quiz);
                 botClient.pushMessage(userId, textMessage);
