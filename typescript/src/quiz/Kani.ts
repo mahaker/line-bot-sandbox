@@ -21,7 +21,7 @@ export default class Kani implements Provider {
     }
 
     hasNext(): boolean {
-        return this.quizzes.length - 1 === this.index;
+        return this.quizzes.length > this.index;
     }
 
     next(): Quiz {
