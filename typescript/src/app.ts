@@ -101,7 +101,7 @@ function buildForm(q: Quiz): FlexMessage {
     }
     const flexHero: FlexImage = {
         type: 'image',
-        url: 'https://drive.google.com/open?id=1ed9oXx4DTmL6iAxw8CeumeGcJ3OEZLxy',
+        url: 'https://drive.google.com/file/d/1CZuduNPa3T-AsDJnrKj4wkHDdrM6_Z34/view?usp=sharing',
     }
     const flexBodyContents: FlexText = {
         type: 'text',
