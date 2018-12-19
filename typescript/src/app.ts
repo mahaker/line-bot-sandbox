@@ -45,11 +45,22 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 
 function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
     if(event.type === 'postback') {
-        console.log('ポストバック！');
-        return Promise.resolve(null);
+        return handleRichMenuAction(event);
     } else {
         return pushQuiz(event);
     }
+}
+
+// リッチメニュー上からのアクション
+function handleRichMenuAction(event: PostbackEvent): Promise<any> {
+    const userId: string | undefined = event.source.userId;
+    const data = JSON.parse(event.postback.data);
+    if(data.cmd === 'answer') {
+        console.log(data.answer);
+    } else if(data.cmd === 'ctrl') {
+        console.log(data.action);
+    }
+    return Promise.resolve(null);
 }
 
 // 普通のテキスト入力
