@@ -45,24 +45,12 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 function handleEvent(event: MessageEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
-    // クイズそのものを返す。
     const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
     const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
     
-    if(isValidProviderType(m.text)) {
-        const textMessage: TextMessage = {
-            type: 'text',
-            text: `${m.text}クイズ！`
-        }
-
-        // quiz = quizProvider.init();
-        if(!!userId) {
-            const message: FlexMessage = buildForm(currentQuiz);
-            botClient.pushMessage(userId, textMessage);
-            return botClient.pushMessage(userId, message);
-        } else {
-            return Promise.resolve(null);
-        }
+    if(isValidProviderType(m.text) && !!userId) {
+        const message: FlexMessage = buildForm(currentQuiz);
+        return botClient.pushMessage(userId, message);
     } else {
         return Promise.resolve(null);
     }
@@ -70,6 +58,7 @@ function handleEvent(event: MessageEvent): Promise<any> {
 
 function isValidProviderType(providerType: string): boolean {
     // return quizProvider.type === providerType;
+    // TODO あとで判定ロジック入れる
     return true;
 }
 
