@@ -46,13 +46,11 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
         });
 });
 
-function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
+function handleEvent(event: MessageEvent | PostbackEvent) {
     if(event.type === 'postback') {
-        return handleRichMenuAction(event);
+        handleRichMenuAction(event);
     } else if(event.type === 'message') {
-        return pushQuiz(event);
-    } else {
-        return Promise.resolve(null);
+        pushQuiz(event);
     }
 }
 
