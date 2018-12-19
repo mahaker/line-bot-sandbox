@@ -9,7 +9,6 @@ import {
     PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
-import { text } from 'body-parser';
 
 // TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
@@ -68,7 +67,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
         return !!userId? botClient.pushMessage(userId, buildText(textMessage)) : Promise.resolve(null);
     } else if(data.cmd === 'ctrl') {
         console.log(data.action);
-        switch(data.cmd) {
+        switch(data.action) {
             case(CMD_RESTART):
                 if(!!userId) {
                     currentQuiz = quizProvider.init();
