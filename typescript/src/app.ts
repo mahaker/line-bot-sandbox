@@ -60,8 +60,11 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
             textMessage.text = '不正解！！';
         }
         !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+
         if(quizProvider.hasNext()) {
             quiz = quizProvider.next();
+            const message: TemplateMessage = buildForm(quiz);
+            return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
         } else {
             const textMessage: TextMessage = {
                 type: 'text',
@@ -69,8 +72,8 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
             }
             !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
             quiz = quizProvider.init();
+            return Promise.resolve(null);
         }
-        return Promise.resolve(null);
     } else {
         // クイズそのものを返す。
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
