@@ -9,6 +9,7 @@ import {
     PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
+import { text } from 'body-parser';
 
 // TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
@@ -59,10 +60,14 @@ function handleRichMenuAction(event: PostbackEvent): Promise<any> {
     const data = JSON.parse(event.postback.data);
     if(data.cmd === 'answer') {
         console.log(data.answer);
+        const textMessage = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
+        return !!userId? botClient.pushMessage(userId, buildText(textMessage)) : Promise.resolve(null);
     } else if(data.cmd === 'ctrl') {
         console.log(data.action);
+        return Promise.resolve(null);
+    } else {
+        return Promise.resolve(null);
     }
-    return Promise.resolve(null);
 }
 
 // 普通のテキスト入力
