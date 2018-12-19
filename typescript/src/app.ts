@@ -6,7 +6,7 @@ import {
     Client, middleware, ClientConfig, MiddlewareConfig, 
     MessageEvent,
     TextMessage, TextEventMessage,
-    PostbackEvent, PostbackAction,
+    PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
 
@@ -43,11 +43,20 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
         });
 });
 
-function handleEvent(event: MessageEvent): Promise<any> {
+function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
+    if(event.type === 'postback') {
+        console.log('ポストバック！');
+        return Promise.resolve(null);
+    } else {
+        return pushQuiz(event);
+    }
+}
+
+// 普通のテキスト入力
+function pushQuiz(event: MessageEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
-    const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
-    const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
+    const m: TextEventMessage = event.message as TextEventMessage;
     
     if(isAnswerText(m.text) && !!userId) {
         let textMessage: TextMessage | undefined = undefined;
