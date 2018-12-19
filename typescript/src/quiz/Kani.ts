@@ -15,11 +15,16 @@ export default class Kani implements Provider {
         return this.quizzes.find(q => q.getNo() === no);
     }
 
+    init(): Quiz {
+        this.index = 0;
+        return this.quizzes[this.index];
+    }
+
     hasNext(): boolean {
         return this.quizzes.length - 1 === this.index;
     }
 
     next(): Quiz {
-        return this.quizzes[this.index];
+        return this.quizzes[this.index++];
     }
 }

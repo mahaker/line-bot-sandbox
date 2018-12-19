@@ -21,6 +21,7 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 const quizProvider: Provider = new Kani();
+let quiz: Quiz = quizProvider.next();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -58,7 +59,18 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
         } else {
             textMessage.text = '不正解！！';
         }
-        return !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+        !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+        if(quizProvider.hasNext()) {
+            quiz = quizProvider.next();
+        } else {
+            const textMessage: TextMessage = {
+                type: 'text',
+                text: 'クイズは終了です！' 
+            }
+            !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
+        }
+        quizProvider.init();
+        return Promise.resolve(null);
     } else {
         // クイズそのものを返す。
         const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
@@ -70,8 +82,8 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                 text: `${m.text}クイズ！`
             }
 
-            if(!!userId && quizProvider.hasNext()) {
-                const message: TemplateMessage = buildForm(quizProvider.next());
+            if(!!userId) {
+                const message: TemplateMessage = buildForm(quiz);
                 botClient.pushMessage(userId, textMessage);
                 return botClient.pushMessage(userId, message);
             } else {
