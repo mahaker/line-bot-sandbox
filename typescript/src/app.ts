@@ -1,9 +1,6 @@
 import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
-import Eiheiji from './quiz/Eiheiji';
-import Tojinbou from './quiz/Tojinbou';
-import Matsunami from './quiz/Matsunami';
 import Express, { Request, Response } from 'express';
 import { 
     Client, middleware, 
@@ -23,13 +20,7 @@ const botClient = new Client(clientConfig);
 const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
-let quizProvider: Provider = new Kani();
-const quizProviders: Provider[] = [
-    new Kani(),
-    new Eiheiji(),
-    new Tojinbou(),
-    new Matsunami(),
-];
+const quizProvider: Provider = new Kani();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -79,22 +70,6 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
                 text: `${m.text}クイズ！`
             }
 
-            // クイズを設定
-            switch(m.text) {
-                case('かに'): 
-                    quizProvider = new Kani();
-                    break;
-                case('永平寺'):
-                    quizProvider = new Eiheiji();
-                    break;
-                case('東尋坊'):
-                    quizProvider = new Tojinbou();
-                    break;
-                case('まつなみ'):
-                    quizProvider = new Matsunami();
-                    break;
-            }
-
             if(!!userId && quizProvider.hasNext()) {
                 const message: TemplateMessage = buildForm(quizProvider.next());
                 botClient.pushMessage(userId, textMessage);
@@ -109,7 +84,7 @@ function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
 }
 
 function isValidProviderType(providerType: string): boolean {
-    return quizProviders.find(p => p.type === providerType) !== undefined;
+    return quizProvider.type === providerType;
 }
 
 function buildForm(q: Quiz): TemplateMessage {
