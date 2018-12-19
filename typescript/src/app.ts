@@ -6,7 +6,8 @@ import {
     Client, middleware, ClientConfig, MiddlewareConfig, 
     MessageEvent,
     TextMessage, TextEventMessage,
-    FlexMessage, FlexContainer, FlexBubble, FlexBox, FlexText,
+    PostbackEvent, PostbackAction,
+    FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
 
 // TODO 環境変数か、.envファイルで指定したい。
@@ -98,6 +99,10 @@ function buildForm(q: Quiz): FlexMessage {
         layout: 'horizontal',
         contents: [flexHeaderContents],
     }
+    const flexHero: FlexImage = {
+        type: 'image',
+        url: 'https://drive.google.com/open?id=1ed9oXx4DTmL6iAxw8CeumeGcJ3OEZLxy',
+    }
     const flexBodyContents: FlexText = {
         type: 'text',
         text: q.getText(),
@@ -115,6 +120,7 @@ function buildForm(q: Quiz): FlexMessage {
         type: 'bubble',
         direction: 'ltr',
         header: flexHeader,
+        hero: flexHero,
         body: flexBody,
     }
     const message: FlexMessage = {

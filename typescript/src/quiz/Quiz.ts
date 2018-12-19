@@ -7,9 +7,6 @@ export default class Q {
     getText(): string {
         return this.text;
     }
-    getAnswer(): boolean {
-        return this.answer;
-    }
     isCorrect(answer: boolean): boolean {
         return this.answer === answer;
     }
