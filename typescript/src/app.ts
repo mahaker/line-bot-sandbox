@@ -3,10 +3,11 @@ import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
 import { 
-    Client, middleware, 
-    ClientConfig, MiddlewareConfig, 
-    MessageEvent, PostbackEvent,
-    TemplateMessage, TemplateConfirm, TextMessage, Action, TextEventMessage} from '@line/bot-sdk';
+    Client, middleware, ClientConfig, MiddlewareConfig, 
+    MessageEvent,
+    TextMessage, TextEventMessage,
+    FlexMessage, FlexContainer, FlexBubble, FlexBox, FlexText,
+} from '@line/bot-sdk';
 
 // TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
@@ -20,8 +21,11 @@ const botClient = new Client(clientConfig);
 const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
+
+const CMD_MARU = 'まる！！';
+const CMD_BATSU = 'ばつ！！';
 const quizProvider: Provider = new Kani();
-let quiz: Quiz = quizProvider.next();
+let currentQuiz: Quiz = quizProvider.next();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -38,97 +42,72 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
         });
 });
 
-function handleEvent(event: MessageEvent | PostbackEvent): Promise<any> {
+function handleEvent(event: MessageEvent): Promise<any> {
     const userId: string | undefined = event.source.userId;
 
-    if(event.type === 'postback') {
-        // クイズの回答を検証する。
-        const _event: PostbackEvent = event as PostbackEvent;
-        const data = JSON.parse(_event.postback.data);
-        const quizNo: number = data.no;
-        const selectedAnswer: boolean = data.answer;
-        
-        // TODO immutableにしたい
+    // クイズそのものを返す。
+    const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
+    const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
+    
+    if(isValidProviderType(m.text)) {
         const textMessage: TextMessage = {
             type: 'text',
-            text: ''
+            text: `${m.text}クイズ！`
         }
-        const _quizProvider: Quiz | undefined = quizProvider.getQuizByNo(quizNo);
-        if(!!_quizProvider && _quizProvider.isCorrect(quizNo, selectedAnswer)) {
-            textMessage.text = '正解！！';
-        } else {
-            textMessage.text = '不正解！！';
-        }
-        !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
 
-        if(quizProvider.hasNext()) {
-            quiz = quizProvider.next();
-            const message: TemplateMessage = buildForm(quiz);
-            return !!userId? botClient.pushMessage(userId, message) : Promise.resolve(null);
+        // quiz = quizProvider.init();
+        if(!!userId) {
+            const message: FlexMessage = buildForm(currentQuiz);
+            botClient.pushMessage(userId, textMessage);
+            return botClient.pushMessage(userId, message);
         } else {
-            const textMessage: TextMessage = {
-                type: 'text',
-                text: 'クイズは終了です！' 
-            }
-            !!userId? botClient.pushMessage(userId, textMessage) : Promise.resolve(null);
-            quiz = quizProvider.init();
             return Promise.resolve(null);
         }
     } else {
-        // クイズそのものを返す。
-        const e: MessageEvent = event as MessageEvent; // TODO なんとかしたい
-        const m: TextEventMessage = e.message as TextEventMessage; // TODO なんとかしたい
-    
-        if(isValidProviderType(m.text)) {
-            const textMessage: TextMessage = {
-                type: 'text',
-                text: `${m.text}クイズ！`
-            }
-
-            // quiz = quizProvider.init();
-            if(!!userId) {
-                const message: TemplateMessage = buildForm(quiz);
-                botClient.pushMessage(userId, textMessage);
-                return botClient.pushMessage(userId, message);
-            } else {
-                return Promise.resolve(null);
-            }
-        } else {
-            return Promise.resolve(null);
-        }
+        return Promise.resolve(null);
     }
 }
 
 function isValidProviderType(providerType: string): boolean {
-    return quizProvider.type === providerType;
+    // return quizProvider.type === providerType;
+    return true;
 }
 
-function buildForm(q: Quiz): TemplateMessage {
-    const messageActions: Action[] = [
-        {
-            type: 'postback',
-            label: 'yes',
-            displayText: 'yes',
-            data: `${JSON.stringify({"no": q.getNo(), "answer": true})}`,
-        },
-        {
-            type: 'postback',
-            label: 'no',
-            displayText: 'no',
-            data: `${JSON.stringify({"no": q.getNo(), "answer": false})}`,
-        },
-    ];
-
-    const templateConfirm: TemplateConfirm = {
-        type: 'confirm',
-        text: q.getText(),
-        actions: messageActions, 
-    }; 
-
-    const message: TemplateMessage = {
-        type: 'template',
-        altText: 'confirm message',
-        template: templateConfirm,
+function buildForm(q: Quiz): FlexMessage {
+    const flexBodyContents: FlexText = {
+        type: 'text',
+        text: '質問',
+        size: 'md',
+        align: 'start',
+    }
+    const flexBody: FlexBox = {
+        type: 'box',
+        layout: 'horizontal',
+        spacing: 'md',
+        contents: [flexBodyContents],
+    }
+    const flexHeaderContents: FlexText = {
+        type: 'text',
+        text: '問題',
+        size: 'lg',
+        align: 'center',
+        weight: 'bold',
+    }
+    const flexHeader: FlexBox = {
+        type: 'box',
+        layout: 'horizontal',
+        contents: [flexHeaderContents],
+    }
+    const flexContents: FlexBubble = {
+        type: 'bubble',
+        direction: 'ltr',
+        header: flexHeader,
+        body: flexBody,
+    }
+    const message: FlexMessage = {
+        type: 'flex',
+        altText: 'Flex message',
+        contents: flexContents,
     }
     return message;
 }
