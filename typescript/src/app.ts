@@ -2,8 +2,8 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
-import { 
-    Client, middleware, ClientConfig, MiddlewareConfig, 
+import {
+    Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
     TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
@@ -46,9 +46,9 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: MessageEvent | PostbackEvent) {
-    if(event.type === 'postback') {
+    if (event.type === 'postback') {
         handleRichMenuAction(event);
-    } else if(event.type === 'message') {
+    } else if (event.type === 'message') {
         pushQuiz(event);
     }
 }
@@ -58,24 +58,24 @@ async function handleRichMenuAction(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
-    if(data.cmd === 'answer') {
-        const textMessage = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
-        if(!!userId) await botClient.pushMessage(userId, buildText(textMessage));
-    } else if(data.cmd === 'ctrl') {
-        switch(data.action) {
-            case(CMD_RESTART):
-                if(!!userId) {
+    if (data.cmd === 'answer') {
+        const textMessage = currentQuiz.isCorrect(data.answer) ? 'せいかい！' : 'はずれ！';
+        if (!!userId) await botClient.pushMessage(userId, buildText(textMessage));
+    } else if (data.cmd === 'ctrl') {
+        switch (data.action) {
+            case (CMD_RESTART):
+                if (!!userId) {
                     quizProvider.init();
                     currentQuiz = quizProvider.next();
                     const message: FlexMessage = buildForm(currentQuiz);
                     await botClient.pushMessage(userId, message);
                 }
                 break;
-            case(CMD_DETAIL):
+            case (CMD_DETAIL):
                 break;
-            case(CMD_NEXT):
-                if(!!userId) {
-                    currentQuiz = quizProvider.hasNext()? quizProvider.next() : currentQuiz;
+            case (CMD_NEXT):
+                if (!!userId) {
+                    currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
                     const message: FlexMessage = buildForm(currentQuiz);
                     await botClient.pushMessage(userId, message);
                 }
@@ -87,7 +87,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
 // 普通のテキスト入力
 async function pushQuiz(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
-    if(!!userId) {
+    if (!!userId) {
         await botClient.pushMessage(userId, buildForm(currentQuiz));
     }
 }
@@ -111,41 +111,41 @@ function buildForm(q: Quiz): FlexMessage {
         size: 'lg',
         align: 'center',
         weight: 'bold',
-    }
+    };
     const flexHeader: FlexBox = {
         type: 'box',
         layout: 'horizontal',
         contents: [flexHeaderContents],
-    }
+    };
     const flexHero: FlexImage = {
         type: 'image',
         url: q.getImageUrl(),
-    }
+    };
     const flexBodyContents: FlexText = {
         type: 'text',
         text: q.getText(),
         size: 'md',
         align: 'start',
         wrap: true,
-    }
+    };
     const flexBody: FlexBox = {
         type: 'box',
         layout: 'horizontal',
         spacing: 'md',
         contents: [flexBodyContents],
-    }
+    };
     const flexContents: FlexBubble = {
         type: 'bubble',
         direction: 'ltr',
         header: flexHeader,
         hero: flexHero,
         body: flexBody,
-    }
+    };
     const message: FlexMessage = {
         type: 'flex',
         altText: 'Flex message',
         contents: flexContents,
-    }
+    };
     return message;
 }
 
