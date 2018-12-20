@@ -49,6 +49,7 @@ $ heroku buildpacks:add heroku/nodejs -a [app-name]
 $ heroku config:set NPM_CONFIG_PRODUCTION=false -a [app-name]
 
 # Registration git repository
+$ git init
 $ heroku git:remote -a [app-name] 
 $ git push heroku master
 $ heroku logs --tail
