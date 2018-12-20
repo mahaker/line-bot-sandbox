@@ -9,6 +9,23 @@ import {
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
 
+/**
+ * アプリ全体のTODO
+ * ProcfileをREADMEに書く。
+ * 最後のクイズであることを知らせる。
+ * クイズが最後までいったら、クイズを初期化する。
+ * 正解したら次のクイズが表示される。
+ * 外れたら今のクイズが再表示される。
+ * 「くわしく見る」の実装
+    Kani.tsに実装して、それをTextMessageで返せば良さそう。
+ * create-richmenu.shのリファクタリング
+ * ボットが動いている様子を録画する。
+ * lint対応
+ * 複数ユーザーでテスト
+   クイズの問題が全ユーザーで共有されているかもしれない。
+   userIdとcurrentQuizのマッピングが必要（？）
+ */
+
 // TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || '',
