@@ -1,4 +1,4 @@
-import { Client, TemplateMessage } from '@line/bot-sdk';
+import { Action, Client, PostbackAction, TemplateMessage } from '@line/bot-sdk';
 import CheckResult from './CheckResult';
 
 export default class CheckDialog {
@@ -7,6 +7,7 @@ export default class CheckDialog {
     '△': CheckResult.Usual,
     '○': CheckResult.Good
   };
+  private static readonly MESSAGE_DATA_PREFIX = 'checkListMessage';
 
   constructor(
     private botClient: Client,
@@ -16,23 +17,11 @@ export default class CheckDialog {
 
   public async show(userId: string) {
     console.log(`${this.questionNumber} 問目 : ${this.questionText}`);
-    // tslint:disable-next-line:object-literal-sort-keys
+    const buttons = this.createButtuns(this.questionNumber);
     const message: TemplateMessage = {
       altText: 'This is a buttons template',
       template: {
-        actions: [
-          { data: 'action=buy&itemid=123', label: 'Buy', type: 'postback' },
-          {
-            data: `checkList,${this.questionNumber},${CheckResult.Good}`,
-            label: '○',
-            type: 'postback'
-          },
-          {
-            label: 'View detail',
-            type: 'uri',
-            uri: 'http://example.com/page/123'
-          }
-        ],
+        actions: buttons,
         text: this.questionText,
         title: `生活習慣チェックリスト その${this.questionNumber}`,
         type: 'buttons'
@@ -40,5 +29,17 @@ export default class CheckDialog {
       type: 'template'
     };
     await this.botClient.pushMessage(userId, message);
+  }
+
+  private createButtuns(questionNumber: number): Action[] {
+    const actions: Action[] = [];
+    const value = `${CheckDialog.MESSAGE_DATA_PREFIX},${questionNumber},CheckResult.Good`;
+    const buttun: PostbackAction = {
+      data: value,
+      text: '○',
+      type: 'postback',
+    };
+    actions.push(buttun as Action);
+    return actions;
   }
 }
