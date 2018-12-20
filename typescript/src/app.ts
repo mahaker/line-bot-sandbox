@@ -17,14 +17,12 @@ import {
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
-   クイズの問題が全ユーザーで共有されているかもしれない。
-   userIdとcurrentQuizのマッピングが必要（？）
  * 点数（正解だったクイズ）を表示する。
 　 まずは全問回答する、という前提で。
 　 スキップ（次のクイズ）が押される考慮
+ * CMD_* をEnumにする
  */
 
-// TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || '',
 };
@@ -37,13 +35,13 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-const CMD_MARU = 'まる！';
-const CMD_BATSU = 'ばつ！';
 const CMD_RESTART = 'restart';
 const CMD_DETAIL = 'detail';
 const CMD_NEXT = 'next';
-const quizProvider: Provider = new Kani();
-let currentQuiz: Quiz = quizProvider.next();
+const QUIZ_PROVIDER: Provider = new Kani();
+
+// ユーザーとcurrentQuizのマッピング
+const userProviderMap = new Map<string, Provider>();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -64,6 +62,11 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     if (!userId) {
         return;
+    }
+
+    // 初めてボットを利用するユーザーはMapに追加
+    if (userProviderMap.get(userId) === undefined) {
+        userProviderMap.set(userId, QUIZ_PROVIDER);
     }
 
     if (event.type === 'postback') {
@@ -91,11 +94,19 @@ async function handleRichMenuAction(event: PostbackEvent) {
         return;
     }
 
+    const quizProvider: Provider | undefined = userProviderMap.get(userId);
+    if (!quizProvider) {
+        return;
+    }
+    const currentQuiz: Quiz = quizProvider.current();
+
     if (data.cmd === 'answer') {
         if (currentQuiz.isCorrect(data.answer)) {
             // 正解なら次の問題を送信
             await botClient.pushMessage(userId, buildText('せいかい！'));
-            currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+            if (quizProvider.hasNext()) {
+                quizProvider.next();
+            }
             pushQuiz(userId);
         } else {
             // 不正解なら今の問題を送信
@@ -106,14 +117,15 @@ async function handleRichMenuAction(event: PostbackEvent) {
         switch (data.action) {
             case (CMD_RESTART):
                 quizProvider.init();
-                currentQuiz = quizProvider.next();
                 pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
                 await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
-                currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+                if (quizProvider.hasNext()) {
+                    quizProvider.next();
+                }
                 pushQuiz(userId);
                 break;
         }
@@ -121,11 +133,13 @@ async function handleRichMenuAction(event: PostbackEvent) {
 }
 
 // 睡眠クイズを返す。 
-async function pushQuiz(userId: string | undefined) {
-    if (!userId) {
+async function pushQuiz(userId: string) {
+    const provider: Provider | undefined = userProviderMap.get(userId);
+    if (provider === undefined) {
         return;
     }
-    await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
+    const quiz: Quiz = provider.current();
+    await botClient.pushMessage(userId, buildQuizForm(quiz));
 }
 
 // チェックリストを返す。
