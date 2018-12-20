@@ -132,11 +132,6 @@ async function pushChecklist(event: MessageEvent) {
     console.log('checklist');
 }
 
-// 「回答」を入力されていればtrue
-function isAnswerText(txt: string): boolean {
-    return txt === CMD_MARU || txt === CMD_BATSU;
-}
-
 // テキストメッセージを返す。最大2000文字
 function buildText(t: string): TextMessage {
     return {
