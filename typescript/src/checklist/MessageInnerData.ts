@@ -12,7 +12,7 @@ export default class MessageInnerData {
 
     const values = data.split(',');
     const questionNumber = Number(values[1]);
-    const checkResult = Number(values[2]);
+    const checkResult = CheckResult[Number(values[2])] as CheckResult;
 
     console.log('checkResultの値は？:' + checkResult);
 
