@@ -79,41 +79,38 @@ async function handleRichMenuAction(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
+    if (!userId) {
+        return;
+    }
+
     if (data.cmd === 'answer') {
         const textMessage = currentQuiz.isCorrect(data.answer) ? 'せいかい！' : 'はずれ！';
-        if (!!userId) await botClient.pushMessage(userId, buildText(textMessage));
+        await botClient.pushMessage(userId, buildText(textMessage));
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):
-                if (!!userId) {
-                    quizProvider.init();
-                    currentQuiz = quizProvider.next();
-                    const message: FlexMessage = buildQuizForm(currentQuiz);
-                    await botClient.pushMessage(userId, message);
-                }
+                quizProvider.init();
+                currentQuiz = quizProvider.next();
+                pushQuiz(event);
                 break;
             case (CMD_DETAIL):
-                if (!!userId) {
-                    await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
-                }
+                await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
-                if (!!userId) {
-                    currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
-                    const message: FlexMessage = buildQuizForm(currentQuiz);
-                    await botClient.pushMessage(userId, message);
-                }
+                currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+                pushQuiz(event);
                 break;
         }
     }
 }
 
 // 睡眠クイズを返す。 
-async function pushQuiz(event: MessageEvent) {
+async function pushQuiz(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
-    if (!!userId) {
-        await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
+    if (!userId) {
+        return;
     }
+    await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
 }
 
 // チェックリストを返す。
