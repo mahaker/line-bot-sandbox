@@ -1,13 +1,22 @@
 #!/bin/bash
 
-# TODO オプションのパース
-#      1. チャンネルアクセストークン
-#      2. リッチメニューに設定する画像のパス
 # TODO デフォルトリッチメニューの取得
 # TODO デフォルトリッチメニューの解除
 # TODO リッチメニューの作成
 # TODO リッチメニューの画像を設定
 # TODO リッチメニューとユーザーのリンク
+
+while getopts ":a:i:" OPT ; do
+  if [ $OPT = 'a' ]; then
+    CHANNEL_ACCESS_TOKEN=$OPTARG
+  elif [ $OPT = 'i' ]; then
+    IMAGE_PATH=$OPTARG
+  else
+    echo "無効なオプションです。"
+    echo 'usage: ./create-richmenu.sh -a {channel access token} -i {/path/to/image.jpg}'
+    exit 1
+  fi
+done
 
 # リッチメニューの作成
 # curl -v -X POST https://api.line.me/v2/bot/richmenu \
