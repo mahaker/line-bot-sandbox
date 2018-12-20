@@ -1,7 +1,7 @@
 import { Client } from '@line/bot-sdk';
+import CheckListQuestions from './CheckListQuestions';
 import CheckListResults from './CheckListResults';
 import CheckResult from './CheckResult';
-import CheckListQuestions from './CheckListQuestions';
 
 export default class CheckListInterlocutor {
   private static readonly RESULT_CHAR: { [key: string]: CheckResult } = {
@@ -35,6 +35,7 @@ export default class CheckListInterlocutor {
       this.checkListResults.goal(userId);
       // TODO おめでとうございます！処理
       console.log('おめでとうございます！チェック終わりました。');
+      // XXX 「記録をどこかに残すようなボット」にするなら、チェックの結果をここで永続化するようにする
       return;
     }
     this.displayQuestion(nowNumber);
