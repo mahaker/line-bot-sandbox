@@ -65,21 +65,28 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 function handleEvent(event: MessageEvent | PostbackEvent) {
 
     console.log('とりあえず、ここを通っているかを見る。');
-    console.log('event: ' + event);
-    console.log('event: ' + event.type);
 
     if (event.type === 'postback') {
+        console.log('postback');
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
+        console.log('message');
+
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
 
         if (_textEventMessage.text === 'クイズ') {
+            console.log('クイズ行き');
+
             pushQuiz(_event);
         } else if (_textEventMessage.text === 'チェックリスト') {
+            console.log('チェックリスト行き');
+
             pushChecklist(_event);
         }
     }
+    console.log('if文の外');
+
 }
 
 // リッチメニュー上からのアクション
