@@ -90,7 +90,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
                 if (!!userId) {
                     quizProvider.init();
                     currentQuiz = quizProvider.next();
-                    const message: FlexMessage = buildForm(currentQuiz);
+                    const message: FlexMessage = buildQuizForm(currentQuiz);
                     await botClient.pushMessage(userId, message);
                 }
                 break;
@@ -99,7 +99,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
             case (CMD_NEXT):
                 if (!!userId) {
                     currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
-                    const message: FlexMessage = buildForm(currentQuiz);
+                    const message: FlexMessage = buildQuizForm(currentQuiz);
                     await botClient.pushMessage(userId, message);
                 }
                 break;
@@ -111,7 +111,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
 async function pushQuiz(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
     if (!!userId) {
-        await botClient.pushMessage(userId, buildForm(currentQuiz));
+        await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
     }
 }
 
@@ -133,7 +133,7 @@ function buildText(t: string): TextMessage {
     };
 }
 
-function buildForm(q: Quiz): FlexMessage {
+function buildQuizForm(q: Quiz): FlexMessage {
     const flexHeaderContents: FlexText = {
         type: 'text',
         text: `問題${q.getNo()}`,
