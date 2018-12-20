@@ -95,6 +95,9 @@ async function handleRichMenuAction(event: PostbackEvent) {
                 }
                 break;
             case (CMD_DETAIL):
+                if (!!userId) {
+                    await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
+                }
                 break;
             case (CMD_NEXT):
                 if (!!userId) {

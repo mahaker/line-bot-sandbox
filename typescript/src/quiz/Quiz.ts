@@ -3,6 +3,7 @@ export default class Q {
         private no: number,
         private text: string,
         private imageUrl: string,
+        private detail: string,
         private answer: boolean) {}
 
     getNo(): number {
@@ -13,6 +14,9 @@ export default class Q {
     }
     getImageUrl(): string {
         return this.imageUrl;
+    }
+    getDetail(): string {
+        return this.detail;
     }
     isCorrect(answer: boolean): boolean {
         return this.answer === answer;
