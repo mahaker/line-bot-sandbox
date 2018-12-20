@@ -144,7 +144,7 @@ async function pushQuiz(userId: string | undefined) {
     if (provider === undefined) {
         return;
     }
-    const quiz: Quiz = provider.hasNext()? provider.next() : initialQuiz;
+    const quiz: Quiz = provider.current();
     await botClient.pushMessage(userId, buildQuizForm(quiz));
 }
 
