@@ -97,11 +97,19 @@ async function handleRichMenuAction(event: PostbackEvent) {
         return;
     }
 
+    const quizProvider: Provider | undefined = userProviderMap.get(userId);
+    if (!quizProvider) {
+        return;
+    }
+    const cQuiz: Quiz = quizProvider.current();
+
     if (data.cmd === 'answer') {
-        if (currentQuiz.isCorrect(data.answer)) {
+        if (cQuiz.isCorrect(data.answer)) {
             // 正解なら次の問題を送信
             await botClient.pushMessage(userId, buildText('せいかい！'));
-            currentQuiz = QUIZ_PROVIDER.hasNext() ? QUIZ_PROVIDER.next() : currentQuiz;
+            if (quizProvider.hasNext()) {
+                quizProvider.next();
+            }
             pushQuiz(userId);
         } else {
             // 不正解なら今の問題を送信
@@ -111,15 +119,16 @@ async function handleRichMenuAction(event: PostbackEvent) {
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):
-                QUIZ_PROVIDER.init();
-                currentQuiz = QUIZ_PROVIDER.next();
+                quizProvider.init();
                 pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
-                await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
+                await botClient.pushMessage(userId, buildText(cQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
-                currentQuiz = QUIZ_PROVIDER.hasNext() ? QUIZ_PROVIDER.next() : currentQuiz;
+                if (quizProvider.hasNext()) {
+                    quizProvider.next();
+                }
                 pushQuiz(userId);
                 break;
         }
