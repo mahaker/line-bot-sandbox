@@ -61,6 +61,11 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: MessageEvent | PostbackEvent) {
+    const userId: string | undefined = event.source.userId;
+    if (!userId) {
+        return;
+    }
+
     if (event.type === 'postback') {
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
@@ -68,7 +73,7 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
         
         if (_textEventMessage.text === 'クイズ') {
-            pushQuiz(_event);
+            pushQuiz(userId);
         } else if (_textEventMessage.text === 'チェックリスト') {
             pushChecklist(_event);
         }
@@ -89,33 +94,32 @@ async function handleRichMenuAction(event: PostbackEvent) {
             // 正解なら次の問題を送信
             await botClient.pushMessage(userId, buildText('せいかい！'));
             currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
-            pushQuiz(event);
+            pushQuiz(userId);
         } else {
             // 不正解なら今の問題を送信
             await botClient.pushMessage(userId, buildText('はずれ！'));
-            pushQuiz(event);
+            pushQuiz(userId);
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):
                 quizProvider.init();
                 currentQuiz = quizProvider.next();
-                pushQuiz(event);
+                pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
                 await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
                 currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
-                pushQuiz(event);
+                pushQuiz(userId);
                 break;
         }
     }
 }
 
 // 睡眠クイズを返す。 
-async function pushQuiz(event: MessageEvent | PostbackEvent) {
-    const userId: string | undefined = event.source.userId;
+async function pushQuiz(userId: string | undefined) {
     if (!userId) {
         return;
     }
