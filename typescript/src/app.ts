@@ -129,6 +129,7 @@ function isAnswerText(txt: string): boolean {
     return txt === CMD_MARU || txt === CMD_BATSU;
 }
 
+// テキストメッセージを返す。最大2000文字
 function buildText(t: string): TextMessage {
     return {
         type: 'text',
