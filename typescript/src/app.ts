@@ -14,13 +14,14 @@ import {
  * ProcfileをREADMEに書く。
  * 最後のクイズであることを知らせる。
  * クイズが最後までいったら、クイズを初期化する。
- * 正解したら次のクイズが表示される。
- * 外れたら今のクイズが再表示される。
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
    クイズの問題が全ユーザーで共有されているかもしれない。
    userIdとcurrentQuizのマッピングが必要（？）
+ * 点数（正解だったクイズ）を表示する。
+　 まずは全問回答する、という前提で。
+　 スキップ（次のクイズ）が押される考慮
  */
 
 // TODO 環境変数か、.envファイルで指定したい。
@@ -84,8 +85,16 @@ async function handleRichMenuAction(event: PostbackEvent) {
     }
 
     if (data.cmd === 'answer') {
-        const textMessage = currentQuiz.isCorrect(data.answer) ? 'せいかい！' : 'はずれ！';
-        await botClient.pushMessage(userId, buildText(textMessage));
+        if (currentQuiz.isCorrect(data.answer)) {
+            // 正解なら次の問題を送信
+            await botClient.pushMessage(userId, buildText('せいかい！'));
+            currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+            pushQuiz(event);
+        } else {
+            // 不正解なら今の問題を送信
+            await botClient.pushMessage(userId, buildText('はずれ！'));
+            pushQuiz(event);
+        }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):

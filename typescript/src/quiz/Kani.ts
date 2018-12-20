@@ -21,7 +21,7 @@ export default class Kani implements Provider {
             '越前かに漁の解禁日は、毎年11月6日で決まっている',
             'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
             '3問目ここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいります',
-            false),
+            true),
     ];
 
     // TODO 親クラスに移譲したい
