@@ -6,7 +6,7 @@ export default class CheckListResult {
   constructor(private userId: string) {}
 
   public nowNumber(): number {
-    return this.results.length + 1;
+    return this.results.length;
   }
 
   public recordResult(result: CheckResult) {
