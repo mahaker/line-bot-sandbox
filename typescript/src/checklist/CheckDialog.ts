@@ -21,7 +21,11 @@ export default class CheckDialog {
       altText: 'This is a buttons template',
       template: {
         actions: [
-          { type: 'postback', label: 'Buy', data: 'action=buy&itemid=123' },
+          {
+            data: 'action=buy&itemid=123',
+            label: 'Buy',
+            type: 'postback',
+          },
           {
             data: 'action=add&itemid=123',
             label: 'Add to cart',
@@ -33,16 +37,7 @@ export default class CheckDialog {
             uri: 'http://example.com/page/123'
           }
         ],
-        defaultAction: {
-          label: 'View detail',
-          type: 'uri',
-          uri: 'http://example.com/page/123'
-        },
-        imageAspectRatio: 'rectangle',
-        imageBackgroundColor: '#FFFFFF',
-        imageSize: 'cover',
         text: 'Please select',
-        thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
         title: 'Menu',
         type: 'buttons'
       },
