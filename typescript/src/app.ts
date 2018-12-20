@@ -77,7 +77,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
         if (_textEventMessage.text === 'クイズ') {
             pushQuiz(userId);
         } else if (_textEventMessage.text === 'チェックリスト') {
-            pushChecklist(_event);
+            await pushChecklist(_event);
         }
     }
 }
@@ -132,7 +132,7 @@ async function pushQuiz(userId: string | undefined) {
 async function pushChecklist(event: MessageEvent) {
     const userId = event.source.userId;
     if (!userId) return;
-    checklist.start(userId);
+    await checklist.start(userId);
 }
 
 // チェックリストの返答なら処理する。

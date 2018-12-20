@@ -12,11 +12,11 @@ export default class CheckListInterlocutor {
 
   constructor(private botClient: Client) {}
 
-  public start(userId: string): void {
+  public async start(userId: string) {
     this.results.initilize(userId);
     const nowNumber = this.results.nowNumber(userId);
-    this.displayStart(userId);
-    this.displayQuestion(userId, nowNumber);
+    await this.displayStart(userId);
+    await this.displayQuestion(userId, nowNumber);
   }
 
   public reply(userId: string, event: PostbackEvent) {
@@ -36,18 +36,18 @@ export default class CheckListInterlocutor {
     this.displayQuestion(userId, nextNumber);
   }
 
-  private displayStart(userId: string): any {
+  private async displayStart(userId: string) {
     const qCount = this.questions.count();
     let content = `これから「生活習慣チェック」を始めます。(チェック項目:${qCount})\n`;
     content += 'チェック項目の下のボタンを押して、項目を進めてください。';
     const message = new PlainMessage(this.botClient);
-    message.show(userId, content);
+    await message.show(userId, content);
   }
 
-  private displayQuestion(userId: string, questionNumber: number) {
+  private async displayQuestion(userId: string, questionNumber: number) {
     const qText = this.questions.get(questionNumber);
     const dialog = new CheckDialog(this.botClient, questionNumber, qText);
-    dialog.show(userId);
+    await dialog.show(userId);
   }
 
   private diplayFinish(userId: string) {
