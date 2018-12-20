@@ -130,7 +130,10 @@ async function pushQuiz(event: MessageEvent) {
 
 // チェックリストを返す。
 async function pushChecklist(event: MessageEvent) {
-    // Push checklist
+    const userId: string | undefined = event.source.userId;
+    console.log('debug: userid: ' + userId);
+    if (!userId) return;
+    await botClient.pushMessage(userId, buildForm(currentQuiz));
     console.log('checklist');
 }
 
