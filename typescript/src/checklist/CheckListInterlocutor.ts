@@ -1,15 +1,9 @@
 import { Client } from '@line/bot-sdk';
+import CheckDialog from './CheckDialog';
 import CheckListQuestions from './CheckListQuestions';
 import CheckListResults from './CheckListResults';
-import CheckResult from './CheckResult';
 
 export default class CheckListInterlocutor {
-  private static readonly RESULT_CHAR: { [key: string]: CheckResult } = {
-    '×': CheckResult.Bad,
-    '△': CheckResult.Usual,
-    '○': CheckResult.Good
-  };
-
   private readonly questions = new CheckListQuestions();
   private readonly checkListResults = new CheckListResults();
 
@@ -18,11 +12,11 @@ export default class CheckListInterlocutor {
   public start(userId: string): void {
     this.checkListResults.initilize(userId);
     const nowNumber = this.checkListResults.nowNumber(userId);
-    this.displayQuestion(nowNumber);
+    this.displayQuestion(userId, nowNumber);
   }
 
   public reply(userId: string, resultText: string) {
-    const result = CheckListInterlocutor.RESULT_CHAR[resultText];
+    const result = CheckDialog.RESULT_CHAR[resultText];
     if (!result) return;
     if (!this.checkListResults.existsCheckList(userId)) return;
 
@@ -33,13 +27,13 @@ export default class CheckListInterlocutor {
       this.diplayFinish(userId);
       return;
     }
-    this.displayQuestion(nowNumber);
+    this.displayQuestion(userId, nowNumber);
   }
 
-  private displayQuestion(questionNumber: number) {
-    // TODO ちゃんとダイアログにする。
+  private displayQuestion(userId: string, questionNumber: number) {
     const qText = this.questions.get(questionNumber);
-    console.log(`${questionNumber} 問目 : ${qText}`);
+    const dialog = new CheckDialog(this.botClient, questionNumber, qText);
+    dialog.show(userId);
   }
 
   private diplayFinish(userId: string) {
