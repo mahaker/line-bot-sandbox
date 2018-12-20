@@ -2,6 +2,7 @@ import { Client } from '@line/bot-sdk';
 import CheckListResult from '../domain/CheckListResult';
 import PlainMessage from './PlainMessage';
 import CheckResult from '../domain/CheckResult';
+import CheckListQuestions from '../domain/CheckListQuestions';
 
 export default class FinishDialog {
   constructor(private botClient: Client) {}
@@ -16,7 +17,8 @@ export default class FinishDialog {
     let content = 'これでチェックはすべて終了です。お疲れ様でした！\n';
     content += '結果は\n';
     content += this.makeCountParts(checkListResult);
-    content += '\nでした。';
+    content += '\nでした。\n';
+    content += this.makeEvaluationOfHelth(checkListResult);
     return content;
   }
 
@@ -32,6 +34,19 @@ export default class FinishDialog {
     const counts = resTexts.join(', ');
     const point = checkListResult.calculatePoint();
     const maxPoint = checkListResult.maxPoint();
-    return counts + `, 健全度:${point}P(最大:${maxPoint}P)`;
+    return counts + `, ええかんじ度:${point}P(最大:${maxPoint}P)`;
+  }
+
+  private makeEvaluationOfHelth(checkListResult: CheckListResult): string {
+    // TODO ここは適当なんで、なんか判定方法とかあれば書き換える。
+    const minPoint = new CheckListQuestions().count();
+    const point = checkListResult.calculatePoint();
+    if (point === checkListResult.maxPoint())
+      return '素晴らしい！完璧な生活習慣です。';
+    if (point > minPoint * 2)
+      return 'かなり良い生活週間です。この調子で維持しましょう！';
+    if (point > minPoint)
+      return '平均的な生活習慣です。まだ改善できそうですね！';
+    return 'めっちゃヤベーヤツです！是非、生活習慣の改善を！';
   }
 }
