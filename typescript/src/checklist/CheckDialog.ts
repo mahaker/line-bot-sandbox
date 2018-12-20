@@ -21,14 +21,10 @@ export default class CheckDialog {
       altText: 'This is a buttons template',
       template: {
         actions: [
+          { data: 'action=buy&itemid=123', label: 'Buy', type: 'postback' },
           {
-            data: 'action=buy&itemid=123',
-            label: 'Buy',
-            type: 'postback',
-          },
-          {
-            data: 'action=add&itemid=123',
-            label: 'Add to cart',
+            data: `checkList,${this.questionNumber},${CheckResult.Good}`,
+            label: '○',
             type: 'postback'
           },
           {
@@ -37,8 +33,8 @@ export default class CheckDialog {
             uri: 'http://example.com/page/123'
           }
         ],
-        text: 'Please select',
-        title: 'Menu',
+        text: this.questionText,
+        title: `生活習慣チェックリスト その${this.questionNumber}`,
         type: 'buttons'
       },
       type: 'template'
