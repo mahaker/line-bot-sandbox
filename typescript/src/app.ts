@@ -24,7 +24,6 @@ import {
 　 スキップ（次のクイズ）が押される考慮
  */
 
-// TODO 環境変数か、.envファイルで指定したい。
 const clientConfig: ClientConfig = {
     channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || '',
 };
@@ -37,13 +36,15 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-const CMD_MARU = 'まる！';
-const CMD_BATSU = 'ばつ！';
 const CMD_RESTART = 'restart';
 const CMD_DETAIL = 'detail';
 const CMD_NEXT = 'next';
 const quizProvider: Provider = new Kani();
 let currentQuiz: Quiz = quizProvider.next();
+const initialQuiz: Quiz = quizProvider.init();
+
+// ユーザーとcurrentQuizのマッピング
+const userQuizMap = new Map<string, Quiz>();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -64,6 +65,11 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     if (!userId) {
         return;
+    }
+
+    // 初めてボットを利用するユーザーはMapに追加
+    if (userQuizMap.get(userId) === undefined) {
+        userQuizMap.set(userId, initialQuiz);
     }
 
     if (event.type === 'postback') {
@@ -125,7 +131,11 @@ async function pushQuiz(userId: string | undefined) {
     if (!userId) {
         return;
     }
-    await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
+    const quiz: Quiz | undefined = userQuizMap.get(userId);
+    if (quiz === undefined) {
+        return;
+    }
+    await botClient.pushMessage(userId, buildQuizForm(quiz));
 }
 
 // チェックリストを返す。
