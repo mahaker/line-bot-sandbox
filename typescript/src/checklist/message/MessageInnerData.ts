@@ -1,6 +1,8 @@
 import CheckResult from '../domain/CheckResult';
 
-// PostbackMessageのdataに格納する情報
+/**
+ * PostbackMessageのdataに格納する情報
+ */
 export default class MessageInnerData {
   public static parse(data: string): MessageInnerData | undefined {
     if (data.indexOf(MessageInnerData.MESSAGE_DATA_PREFIX) !== 0)

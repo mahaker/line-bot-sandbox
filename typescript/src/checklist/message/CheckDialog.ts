@@ -1,4 +1,4 @@
-import { Action, Client, PostbackAction, TemplateMessage } from '@line/bot-sdk';
+import { Action, Client, TemplateMessage } from '@line/bot-sdk';
 import CheckResult from '../domain/CheckResult';
 import MessageInnerData from './MessageInnerData';
 
