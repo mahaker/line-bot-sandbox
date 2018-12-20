@@ -1,9 +1,9 @@
 import { Client, PostbackEvent } from '@line/bot-sdk';
-import CheckDialog from './CheckDialog';
-import CheckListQuestions from './CheckListQuestions';
-import CheckListResults from './CheckListResults';
-import MessageInnerData from './MessageInnerData';
-import FinishDialog from './FinishDialog';
+import CheckDialog from './message/CheckDialog';
+import CheckListQuestions from './domain/CheckListQuestions';
+import CheckListResults from './domain/CheckListResults';
+import MessageInnerData from './message/MessageInnerData';
+import FinishDialog from './message/FinishDialog';
 
 export default class CheckListInterlocutor {
   private readonly questions = new CheckListQuestions();

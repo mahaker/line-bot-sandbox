@@ -1,4 +1,4 @@
-import CheckResult from './CheckResult';
+import CheckResult from '../domain/CheckResult';
 
 // PostbackMessageのdataに格納する情報
 export default class MessageInnerData {

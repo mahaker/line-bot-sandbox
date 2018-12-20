@@ -1,5 +1,5 @@
 import { Action, Client, PostbackAction, TemplateMessage } from '@line/bot-sdk';
-import CheckResult from './CheckResult';
+import CheckResult from '../domain/CheckResult';
 import MessageInnerData from './MessageInnerData';
 
 export default class CheckDialog {
