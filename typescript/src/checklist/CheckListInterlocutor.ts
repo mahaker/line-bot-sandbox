@@ -1,7 +1,8 @@
-import { Client } from '@line/bot-sdk';
+import { Client, PostbackEvent } from '@line/bot-sdk';
 import CheckDialog from './CheckDialog';
 import CheckListQuestions from './CheckListQuestions';
 import CheckListResults from './CheckListResults';
+import MessageInnerData from './MessageInnerData';
 
 export default class CheckListInterlocutor {
   private readonly questions = new CheckListQuestions();
@@ -15,19 +16,21 @@ export default class CheckListInterlocutor {
     this.displayQuestion(userId, nowNumber);
   }
 
-  public reply(userId: string, resultText: string) {
-    const result = CheckDialog.RESULT_CHAR[resultText];
-    if (!result) return;
+  public reply(userId: string, event: PostbackEvent) {
+    const messageData = MessageInnerData.parse(event.postback.data);
+    if (!messageData) return;
     if (!this.checkListResults.existsCheckList(userId)) return;
-
-    this.checkListResults.recordResult(userId, result);
-
     const nowNumber = this.checkListResults.nowNumber(userId);
-    if (this.questions.isFinished(nowNumber)) {
+    if (nowNumber === messageData.questionNumber) return;
+
+    this.checkListResults.recordResult(userId, messageData.checkResult);
+
+    const nextNumber = this.checkListResults.nowNumber(userId);
+    if (this.questions.isFinished(nextNumber)) {
       this.diplayFinish(userId);
       return;
     }
-    this.displayQuestion(userId, nowNumber);
+    this.displayQuestion(userId, nextNumber);
   }
 
   private displayQuestion(userId: string, questionNumber: number) {

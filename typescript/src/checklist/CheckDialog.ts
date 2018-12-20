@@ -1,5 +1,6 @@
 import { Action, Client, PostbackAction, TemplateMessage } from '@line/bot-sdk';
 import CheckResult from './CheckResult';
+import MessageInnerData from './MessageInnerData';
 
 export default class CheckDialog {
   public static readonly RESULT_CHAR: { [key: string]: CheckResult } = {
@@ -7,7 +8,6 @@ export default class CheckDialog {
     '△': CheckResult.Usual,
     '○': CheckResult.Good
   };
-  private static readonly MESSAGE_DATA_PREFIX = 'checkListMessage';
 
   constructor(
     private botClient: Client,
@@ -33,9 +33,12 @@ export default class CheckDialog {
 
   private createButtuns(questionNumber: number): Action[] {
     const actions: Action[] = [];
-    const value = `${CheckDialog.MESSAGE_DATA_PREFIX},${questionNumber},CheckResult.Good`;
+    const data = new MessageInnerData(questionNumber, CheckResult.Good);
+
+    console.log('data.serialize():' + data.serialize());
+
     const buttun = {
-      data: value,
+      data: data.serialize(),
       label: '○',
       type: 'postback',
     };
