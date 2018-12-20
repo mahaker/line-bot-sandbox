@@ -24,7 +24,7 @@ export default class FinishDialog {
     const resTexts: string[] = [];
     for (const item in CheckResult) {
       const resultType = item as CheckResult;
-      const caption = resultType as string;
+      const caption = CheckResult[item] as string;
       const count = checkListResult.countOf(resultType);
       const part = `${caption}:${count}`;
       resTexts.push(part);
