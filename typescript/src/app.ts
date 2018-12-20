@@ -16,8 +16,6 @@ import {
  * クイズが最後までいったら、クイズを初期化する。
  * 正解したら次のクイズが表示される。
  * 外れたら今のクイズが再表示される。
- * 「くわしく見る」の実装
-    Kani.tsに実装して、それをTextMessageで返せば良さそう。
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
@@ -95,6 +93,9 @@ async function handleRichMenuAction(event: PostbackEvent) {
                 }
                 break;
             case (CMD_DETAIL):
+                if (!!userId) {
+                    await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
+                }
                 break;
             case (CMD_NEXT):
                 if (!!userId) {
@@ -126,6 +127,7 @@ function isAnswerText(txt: string): boolean {
     return txt === CMD_MARU || txt === CMD_BATSU;
 }
 
+// テキストメッセージを返す。最大2000文字
 function buildText(t: string): TextMessage {
     return {
         type: 'text',
