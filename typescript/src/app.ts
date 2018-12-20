@@ -73,23 +73,18 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
         console.log('postback');
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
-        console.log('message');
-
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
+        const text = _textEventMessage.text
 
-        if (_textEventMessage.text === 'クイズ') {
-            console.log('クイズ行き');
-
+        if (text === 'クイズ') {
             pushQuiz(_event);
-        } else if (_textEventMessage.text === 'チェックリスト') {
-            console.log('チェックリスト行き');
-
+        } else if (text === 'チェックリスト') {
             pushChecklist(_event);
+        } else {
+            replayChecklist(_event, text);
         }
     }
-    console.log('if文の外');
-
 }
 
 // リッチメニュー上からのアクション
@@ -134,10 +129,17 @@ async function pushQuiz(event: MessageEvent) {
 // チェックリストを返す。
 async function pushChecklist(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
-    console.log('debug: userid: ' + userId);
     if (!userId) return;
-    console.log('checklist');
+    console.log('checklist start');
     checklist.start(userId);
+}
+
+// チェックリストの返答なら処理する。
+async function replayChecklist(event: MessageEvent, text: string) {
+    const userId: string | undefined = event.source.userId;
+    if (!userId) return;
+    console.log('checklist replay');
+    checklist.reply(userId, text);
 }
 
 // 「回答」を入力されていればtrue
