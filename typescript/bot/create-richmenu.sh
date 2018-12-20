@@ -1,3 +1,14 @@
+#!/bin/bash
+
+# TODO オプションのパース
+#      1. チャンネルアクセストークン
+#      2. リッチメニューに設定する画像のパス
+# TODO デフォルトリッチメニューの取得
+# TODO デフォルトリッチメニューの解除
+# TODO リッチメニューの作成
+# TODO リッチメニューの画像を設定
+# TODO リッチメニューとユーザーのリンク
+
 # リッチメニューの作成
 # curl -v -X POST https://api.line.me/v2/bot/richmenu \
 # -H 'Authorization: Bearer {channel access token}' \
