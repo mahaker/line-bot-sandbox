@@ -2,6 +2,7 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
+import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
@@ -46,6 +47,8 @@ const CMD_DETAIL = 'detail';
 const CMD_NEXT = 'next';
 const quizProvider: Provider = new Kani();
 let currentQuiz: Quiz = quizProvider.next();
+
+const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -133,8 +136,8 @@ async function pushChecklist(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
     console.log('debug: userid: ' + userId);
     if (!userId) return;
-    await botClient.pushMessage(userId, buildForm(currentQuiz));
     console.log('checklist');
+    checklist.start(userId);
 }
 
 // 「回答」を入力されていればtrue
