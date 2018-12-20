@@ -20,6 +20,7 @@ import {
  * 点数（正解だったクイズ）を表示する。
 　 まずは全問回答する、という前提で。
 　 スキップ（次のクイズ）が押される考慮
+ * CMD_* をEnumにする
  */
 
 const clientConfig: ClientConfig = {
