@@ -42,11 +42,8 @@ export default class CheckListInterlocutor {
 
   private diplayFinish(userId: string) {
     const result = this.checkListResults.goal(userId);
-    // TODO おめでとうございます！処理
-    console.log('おめでとうございます！チェック終わりました。');
     const dialog = new FinishDialog(this.botClient);
     dialog.show(result);
-
     // XXX 「記録をどこかに残すようなボット」にするなら、チェックの結果をここで永続化するようにする
   }
 }

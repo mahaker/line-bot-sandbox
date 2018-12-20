@@ -10,14 +10,14 @@ export default class CheckDialog {
   ) {}
 
   public async show(userId: string) {
-    console.log(`${this.questionNumber} 問目 : ${this.questionText}`);
+    const title = `生活習慣チェックリスト その${this.questionNumber}`;
     const buttons = this.createButtuns(this.questionNumber);
     const message: TemplateMessage = {
-      altText: 'This is a buttons template',
+      altText: title,
       template: {
         actions: buttons,
         text: this.questionText,
-        title: `生活習慣チェックリスト その${this.questionNumber}`,
+        title: title,
         type: 'buttons'
       },
       type: 'template'
@@ -30,7 +30,6 @@ export default class CheckDialog {
     for (const item in CheckResult) {
       const data = new MessageInnerData(questionNumber, item as CheckResult);
       const caption = CheckResult[item] as string;
-      console.log('data.serialize():' + data.serialize());
       const buttun = {
         data: data.serialize(),
         label: caption,
