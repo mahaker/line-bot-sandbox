@@ -19,9 +19,20 @@ export default class CheckListInterlocutor {
   public reply(userId: string, event: PostbackEvent) {
     const messageData = MessageInnerData.parse(event.postback.data);
     if (!messageData) return;
+
+    console.log('MessageInnerDataのバリデーションはOK');
+
     if (!this.checkListResults.existsCheckList(userId)) return;
+
+    console.log('ユーザにチェックリストがあるかもはOK');
+
     const nowNumber = this.checkListResults.nowNumber(userId);
+    console.log('nowNumber:' + nowNumber);
+    console.log('messageData.questionNumber:' + messageData.questionNumber);
+
     if (nowNumber === messageData.questionNumber) return;
+
+    console.log('今の問題番号が一致しているかチェックもOK');
 
     this.checkListResults.recordResult(userId, messageData.checkResult);
 
