@@ -1,8 +1,8 @@
 import { Client } from '@line/bot-sdk';
-import CheckListResult from '../domain/CheckListResult';
-import PlainMessage from './PlainMessage';
-import CheckResult from '../domain/CheckResult';
 import CheckListQuestions from '../domain/CheckListQuestions';
+import CheckListResult from '../domain/CheckListResult';
+import CheckResult from '../domain/CheckResult';
+import PlainMessage from './PlainMessage';
 
 export default class FinishDialog {
   constructor(private botClient: Client) {}
