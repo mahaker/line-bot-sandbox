@@ -25,13 +25,12 @@ export default class CheckListInterlocutor {
     const result = CheckListInterlocutor.RESULT_CHAR[resultText];
     if (!result) return;
     if (!this.checkListResults.existsCheckList(userId)) return;
+
     this.checkListResults.recordResult(userId, result);
+
     const nowNumber = this.checkListResults.nowNumber(userId);
     if (this.questions.isFinished(nowNumber)) {
-      this.checkListResults.goal(userId);
-      // TODO おめでとうございます！処理
-      console.log('おめでとうございます！チェック終わりました。');
-      // XXX 「記録をどこかに残すようなボット」にするなら、チェックの結果をここで永続化するようにする
+      this.diplayFinish(userId);
       return;
     }
     this.displayQuestion(nowNumber);
@@ -41,5 +40,12 @@ export default class CheckListInterlocutor {
     // TODO ちゃんとダイアログにする。
     const qText = this.questions.get(questionNumber);
     console.log(`${questionNumber} 問目 : ${qText}`);
+  }
+
+  private diplayFinish(userId: string) {
+    this.checkListResults.goal(userId);
+    // TODO おめでとうございます！処理
+    console.log('おめでとうございます！チェック終わりました。');
+    // XXX 「記録をどこかに残すようなボット」にするなら、チェックの結果をここで永続化するようにする
   }
 }
