@@ -38,7 +38,7 @@ export default class CheckDialog {
       console.log('data.serialize():' + data.serialize());
       const buttun = {
         data: data.serialize(),
-        label: item,
+        label: CheckResult[item] as string,
         type: 'postback'
       };
       actions.push(buttun as Action);
