@@ -3,12 +3,6 @@ import CheckResult from './CheckResult';
 import MessageInnerData from './MessageInnerData';
 
 export default class CheckDialog {
-  public static readonly RESULT_CHAR: { [key: string]: CheckResult } = {
-    '×': CheckResult.Bad,
-    '△': CheckResult.Usual,
-    '○': CheckResult.Good
-  };
-
   constructor(
     private botClient: Client,
     private questionNumber: number,
@@ -35,10 +29,11 @@ export default class CheckDialog {
     const actions: Action[] = [];
     for (const item in CheckResult) {
       const data = new MessageInnerData(questionNumber, item as CheckResult);
+      const caption = CheckResult[item] as string;
       console.log('data.serialize():' + data.serialize());
       const buttun = {
         data: data.serialize(),
-        label: CheckResult[item] as string,
+        label: caption,
         type: 'postback'
       };
       actions.push(buttun as Action);
