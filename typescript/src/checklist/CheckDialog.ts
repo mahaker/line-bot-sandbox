@@ -33,16 +33,16 @@ export default class CheckDialog {
 
   private createButtuns(questionNumber: number): Action[] {
     const actions: Action[] = [];
-    const data = new MessageInnerData(questionNumber, CheckResult.Good);
-
-    console.log('data.serialize():' + data.serialize());
-
-    const buttun = {
-      data: data.serialize(),
-      label: '○',
-      type: 'postback',
-    };
-    actions.push(buttun as Action);
+    for (const item in CheckResult) {
+      const data = new MessageInnerData(questionNumber, item as CheckResult);
+      console.log('data.serialize():' + data.serialize());
+      const buttun = {
+        data: data.serialize(),
+        label: item,
+        type: 'postback'
+      };
+      actions.push(buttun as Action);
+    }
     return actions;
   }
 }
