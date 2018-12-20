@@ -60,7 +60,7 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
         });
 });
 
-function handleEvent(event: MessageEvent | PostbackEvent) {
+async function handleEvent(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     if (!userId) {
         return;
@@ -76,6 +76,8 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
             pushQuiz(userId);
         } else if (_textEventMessage.text === 'チェックリスト') {
             pushChecklist(_event);
+        } else {
+            await botClient.pushMessage(userId, buildText('不正な入力です。クイズをする場合は「クイズ」、チェックリストをする場合は「チェックリスト」と入力してください。'));
         }
     }
 }
