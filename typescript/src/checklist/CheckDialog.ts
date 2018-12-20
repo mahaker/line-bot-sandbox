@@ -34,9 +34,9 @@ export default class CheckDialog {
   private createButtuns(questionNumber: number): Action[] {
     const actions: Action[] = [];
     const value = `${CheckDialog.MESSAGE_DATA_PREFIX},${questionNumber},CheckResult.Good`;
-    const buttun: PostbackAction = {
+    const buttun = {
       data: value,
-      text: '○',
+      label: '○',
       type: 'postback',
     };
     actions.push(buttun as Action);
