@@ -24,4 +24,10 @@ export default class CheckListResults {
     const oneUserResult = this.userResults[userId];
     oneUserResult.recordResult(result);
   }
+
+  public goal(userId: string): CheckListResult {
+    const oneUserResult = this.userResults[userId];
+    delete this.userResults[userId];
+    return oneUserResult;
+  }
 }
