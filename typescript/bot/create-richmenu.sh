@@ -4,14 +4,16 @@
 # チャネルアクセストークン
 # jq
 
-while getopts ":a:i:" OPT ; do
+while getopts ":a:i:u:" OPT ; do
   if [ $OPT = 'a' ]; then
     CHANNEL_ACCESS_TOKEN=$OPTARG
   elif [ $OPT = 'i' ]; then
     IMAGE_PATH=$OPTARG
+  elif [ $OPT = 'u' ]; then
+    USER_ID=$OPTARG
   else
     echo "無効なオプションです。"
-    echo 'usage: ./create-richmenu.sh -a {channel access token} -i {/path/to/image.jpg}'
+    echo 'usage: ./create-richmenu.sh -u {userid} -a {channel access token} -i {/path/to/image.jpg}'
     exit 1
   fi
 done
@@ -108,12 +110,11 @@ NEW_RICHMENU_ID=`curl -v -X POST https://api.line.me/v2/bot/richmenu \
 }' | jq -r ".richMenuId"`
 
 # リッチメニューに画像を設定
-curl -v -X POST https://api.line.me/v2/bot/richmenu/{richMenuId}/content \
+curl -v -X POST "https://api.line.me/v2/bot/richmenu/$NEW_RICHMENU_ID/content" \
 -H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN" \
 -H "Content-Type: image/jpeg" \
 -T $IMAGE_PATH 
 
-# ボットとリッチメニューを関連づけ
-# useridはボットの「チャネル基本設定」画面の最下部にある。
-# curl -v -X POST https://api.line.me/v2/bot/user/{userId}/richmenu/{richMenuId} \
-# -H "Authorization: Bearer {channel access token}"
+# ユーザーとリッチメニューを関連づけ
+curl -v -X POST "https://api.line.me/v2/bot/user/$USER_ID/richmenu/$NEW_RICHMENU_ID" \
+-H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN"
