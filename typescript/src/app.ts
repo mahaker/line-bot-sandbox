@@ -17,8 +17,6 @@ import {
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
-   クイズの問題が全ユーザーで共有されているかもしれない。
-   userIdとcurrentQuizのマッピングが必要（？）
  * 点数（正解だったクイズ）を表示する。
 　 まずは全問回答する、という前提で。
 　 スキップ（次のクイズ）が押される考慮
@@ -40,8 +38,6 @@ const CMD_RESTART = 'restart';
 const CMD_DETAIL = 'detail';
 const CMD_NEXT = 'next';
 const QUIZ_PROVIDER: Provider = new Kani();
-let currentQuiz: Quiz = QUIZ_PROVIDER.next();
-const initialQuiz: Quiz = QUIZ_PROVIDER.init();
 
 // ユーザーとcurrentQuizのマッピング
 const userProviderMap = new Map<string, Provider>();
@@ -101,10 +97,10 @@ async function handleRichMenuAction(event: PostbackEvent) {
     if (!quizProvider) {
         return;
     }
-    const cQuiz: Quiz = quizProvider.current();
+    const currentQuiz: Quiz = quizProvider.current();
 
     if (data.cmd === 'answer') {
-        if (cQuiz.isCorrect(data.answer)) {
+        if (currentQuiz.isCorrect(data.answer)) {
             // 正解なら次の問題を送信
             await botClient.pushMessage(userId, buildText('せいかい！'));
             if (quizProvider.hasNext()) {
@@ -123,7 +119,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
                 pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
-                await botClient.pushMessage(userId, buildText(cQuiz.getDetail()));
+                await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
                 if (quizProvider.hasNext()) {
@@ -136,10 +132,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
 }
 
 // 睡眠クイズを返す。 
-async function pushQuiz(userId: string | undefined) {
-    if (!userId) {
-        return;
-    }
+async function pushQuiz(userId: string) {
     const provider: Provider | undefined = userProviderMap.get(userId);
     if (provider === undefined) {
         return;
