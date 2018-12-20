@@ -18,7 +18,7 @@ export default class CheckListInterlocutor {
   public start(userId: string): void {
     this.checkListResults.initilize(userId);
     const nowNumber = this.checkListResults.nowNumber(userId);
-    console.log(`ここで、${nowNumber} 問目を出す`);
+    this.displayQuestion(nowNumber);
   }
 
   public reply(userId: string, resultText: string) {
@@ -37,8 +37,12 @@ export default class CheckListInterlocutor {
       console.log('おめでとうございます！チェック終わりました。');
       return;
     }
-    // TODO 次の問題表示処理
-    const qText = this.questions.get(nowNumber);
-    console.log(`${nowNumber} 問目 : ${qText}`);
+    this.displayQuestion(nowNumber);
+  }
+
+  private displayQuestion(questionNumber: number) {
+    // TODO ちゃんとダイアログにする。
+    const qText = this.questions.get(questionNumber);
+    console.log(`${questionNumber} 問目 : ${qText}`);
   }
 }

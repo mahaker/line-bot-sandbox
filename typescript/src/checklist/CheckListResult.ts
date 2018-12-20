@@ -6,10 +6,10 @@ export default class CheckListResult {
   constructor(private userId: string) {}
 
   public nowNumber(): number {
-    return this.results.length;
+    return this.results.length + 1;
   }
 
   public recordResult(result: CheckResult) {
-    this.results[this.nowNumber()] = result;
+    this.results[this.nowNumber() - 1] = result;
   }
 }
