@@ -2,6 +2,7 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
+import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
@@ -45,6 +46,8 @@ const CMD_NEXT = 'next';
 const quizProvider: Provider = new Kani();
 let currentQuiz: Quiz = quizProvider.next();
 
+const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
+
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
@@ -67,15 +70,18 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     if (event.type === 'postback') {
+        console.log('postback');
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
-        
+
         if (_textEventMessage.text === 'クイズ') {
             pushQuiz(userId);
         } else if (_textEventMessage.text === 'チェックリスト') {
             pushChecklist(_event);
+        } else {
+            replayChecklist(_event, _textEventMessage.text);
         }
     }
 }
@@ -118,7 +124,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
     }
 }
 
-// 睡眠クイズを返す。 
+// 睡眠クイズを返す。
 async function pushQuiz(userId: string | undefined) {
     if (!userId) {
         return;
@@ -128,8 +134,18 @@ async function pushQuiz(userId: string | undefined) {
 
 // チェックリストを返す。
 async function pushChecklist(event: MessageEvent) {
-    // Push checklist
-    console.log('checklist');
+    const userId: string | undefined = event.source.userId;
+    if (!userId) return;
+    console.log('checklist start');
+    checklist.start(userId);
+}
+
+// チェックリストの返答なら処理する。
+async function replayChecklist(event: MessageEvent, text: string) {
+    const userId: string | undefined = event.source.userId;
+    if (!userId) return;
+    console.log('checklist replay');
+    checklist.reply(userId, text);
 }
 
 // テキストメッセージを返す。最大2000文字
