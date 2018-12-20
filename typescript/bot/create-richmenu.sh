@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# TODO デフォルトリッチメニューの取得
-# TODO デフォルトリッチメニューの解除
-# TODO リッチメニューの作成
-# TODO リッチメニューの画像を設定
-# TODO リッチメニューとユーザーのリンク
+# requirements
+# チャネルアクセストークン
+# jq
 
 while getopts ":a:i:" OPT ; do
   if [ $OPT = 'a' ]; then
@@ -17,6 +15,17 @@ while getopts ":a:i:" OPT ; do
     exit 1
   fi
 done
+
+# デフォルトリッチメニューの取得
+DEFAULT_RICHMENU_ID=`curl -s -X GET https://api.line.me/v2/bot/user/all/richmenu -H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN" | jq -r ".richMenuId"`
+if [ "$DEFAULT_RICHMENU_ID" != 'null' ]; then
+  # デフォルトリッチメニューの解除
+  curl -s -X DELETE https://api.line.me/v2/bot/user/all/richmenu -H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN"
+fi
+
+# TODO リッチメニューの作成
+# TODO リッチメニューの画像を設定
+# TODO リッチメニューとユーザーのリンク
 
 # リッチメニューの作成
 # curl -v -X POST https://api.line.me/v2/bot/richmenu \
