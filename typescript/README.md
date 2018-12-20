@@ -45,7 +45,8 @@ $ heroku config:set LINE_CHANNEL_ACCESS_TOKEN=[Your ChannelAccessToken] -a [app-
 $ heroku config:set LINE_CHANNEL_SECRET=[Your ChannelSecret] -a [app-name]
 
 # Add heroku/nodejs buildpack
-$ heroku buildpacks:add heroku/nodejs
+$ heroku buildpacks:add heroku/nodejs -a [app-name]
+$ heroku config:set NPM_CONFIG_PRODUCTION=false -a [app-name]
 
 # Registration git repository
 $ heroku git:remote -a [app-name] 
