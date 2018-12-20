@@ -65,19 +65,11 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 
 async function handleEvent(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
-    if (!userId) {
-        return;
-    }
+    if (!userId) return;
 
     if (event.type === 'postback') {
-        console.log('postback');
-
-        const postback = event.postback;
-        console.log('postback.data の内容:' + postback.data);
-
         if (replayChecklist(event)) return;
-
-        // handleRichMenuAction(event);
+        handleRichMenuAction(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
@@ -138,17 +130,15 @@ async function pushQuiz(userId: string | undefined) {
 
 // チェックリストを返す。
 async function pushChecklist(event: MessageEvent) {
-    const userId: string | undefined = event.source.userId;
+    const userId = event.source.userId;
     if (!userId) return;
-    console.log('checklist start');
     checklist.start(userId);
 }
 
 // チェックリストの返答なら処理する。
 function replayChecklist(event: PostbackEvent): boolean {
-    const userId: string | undefined = event.source.userId;
+    const userId = event.source.userId;
     if (!userId) return false;
-    console.log('checklist replay');
     checklist.reply(userId, event);
     return true;
 }
