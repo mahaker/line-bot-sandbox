@@ -63,12 +63,16 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: MessageEvent | PostbackEvent) {
+
+    console.log('とりあえず、ここを通っているかを見る。');
+    console.log('event: ' + event);
+
     if (event.type === 'postback') {
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
-        
+
         if (_textEventMessage.text === 'クイズ') {
             pushQuiz(_event);
         } else if (_textEventMessage.text === 'チェックリスト') {
@@ -108,7 +112,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
     }
 }
 
-// 睡眠クイズを返す。 
+// 睡眠クイズを返す。
 async function pushQuiz(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
     if (!!userId) {
