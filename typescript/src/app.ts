@@ -39,12 +39,12 @@ const app = Express();
 const CMD_RESTART = 'restart';
 const CMD_DETAIL = 'detail';
 const CMD_NEXT = 'next';
-const quizProvider: Provider = new Kani();
-let currentQuiz: Quiz = quizProvider.next();
-const initialQuiz: Quiz = quizProvider.init();
+const QUIZ_PROVIDER: Provider = new Kani();
+let currentQuiz: Quiz = QUIZ_PROVIDER.next();
+const initialQuiz: Quiz = QUIZ_PROVIDER.init();
 
 // ユーザーとcurrentQuizのマッピング
-const userQuizMap = new Map<string, Quiz>();
+const userProviderMap = new Map<string, Provider>();
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
@@ -68,8 +68,8 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     // 初めてボットを利用するユーザーはMapに追加
-    if (userQuizMap.get(userId) === undefined) {
-        userQuizMap.set(userId, initialQuiz);
+    if (userProviderMap.get(userId) === undefined) {
+        userProviderMap.set(userId, QUIZ_PROVIDER);
     }
 
     if (event.type === 'postback') {
@@ -101,7 +101,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
         if (currentQuiz.isCorrect(data.answer)) {
             // 正解なら次の問題を送信
             await botClient.pushMessage(userId, buildText('せいかい！'));
-            currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+            currentQuiz = QUIZ_PROVIDER.hasNext() ? QUIZ_PROVIDER.next() : currentQuiz;
             pushQuiz(userId);
         } else {
             // 不正解なら今の問題を送信
@@ -111,15 +111,15 @@ async function handleRichMenuAction(event: PostbackEvent) {
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):
-                quizProvider.init();
-                currentQuiz = quizProvider.next();
+                QUIZ_PROVIDER.init();
+                currentQuiz = QUIZ_PROVIDER.next();
                 pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
                 await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
-                currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+                currentQuiz = QUIZ_PROVIDER.hasNext() ? QUIZ_PROVIDER.next() : currentQuiz;
                 pushQuiz(userId);
                 break;
         }
@@ -131,10 +131,11 @@ async function pushQuiz(userId: string | undefined) {
     if (!userId) {
         return;
     }
-    const quiz: Quiz | undefined = userQuizMap.get(userId);
-    if (quiz === undefined) {
+    const provider: Provider | undefined = userProviderMap.get(userId);
+    if (provider === undefined) {
         return;
     }
+    const quiz: Quiz = provider.hasNext()? provider.next() : initialQuiz;
     await botClient.pushMessage(userId, buildQuizForm(quiz));
 }
 
