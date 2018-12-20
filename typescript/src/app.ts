@@ -66,6 +66,7 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
 
     console.log('とりあえず、ここを通っているかを見る。');
     console.log('event: ' + event);
+    console.log('event: ' + event.type);
 
     if (event.type === 'postback') {
         handleRichMenuAction(event);
