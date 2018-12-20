@@ -15,16 +15,14 @@ import {
  * ProcfileをREADMEに書く。
  * 最後のクイズであることを知らせる。
  * クイズが最後までいったら、クイズを初期化する。
- * 正解したら次のクイズが表示される。
- * 外れたら今のクイズが再表示される。
- * 「くわしく見る」の実装
-    Kani.tsに実装して、それをTextMessageで返せば良さそう。
- * create-richmenu.shのリファクタリング
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
    クイズの問題が全ユーザーで共有されているかもしれない。
    userIdとcurrentQuizのマッピングが必要（？）
+ * 点数（正解だったクイズ）を表示する。
+　 まずは全問回答する、という前提で。
+　 スキップ（次のクイズ）が押される考慮
  */
 
 // TODO 環境変数か、.envファイルで指定したい。
@@ -66,8 +64,10 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 });
 
 function handleEvent(event: MessageEvent | PostbackEvent) {
-
-    console.log('とりあえず、ここを通っているかを見る。');
+    const userId: string | undefined = event.source.userId;
+    if (!userId) {
+        return;
+    }
 
     if (event.type === 'postback') {
         console.log('postback');
@@ -75,14 +75,13 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
-        const text = _textEventMessage.text
 
-        if (text === 'クイズ') {
-            pushQuiz(_event);
-        } else if (text === 'チェックリスト') {
+        if (_textEventMessage.text === 'クイズ') {
+            pushQuiz(userId);
+        } else if (_textEventMessage.text === 'チェックリスト') {
             pushChecklist(_event);
         } else {
-            replayChecklist(_event, text);
+            replayChecklist(_event, _textEventMessage.text);
         }
     }
 }
@@ -92,38 +91,45 @@ async function handleRichMenuAction(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
+    if (!userId) {
+        return;
+    }
+
     if (data.cmd === 'answer') {
-        const textMessage = currentQuiz.isCorrect(data.answer) ? 'せいかい！' : 'はずれ！';
-        if (!!userId) await botClient.pushMessage(userId, buildText(textMessage));
+        if (currentQuiz.isCorrect(data.answer)) {
+            // 正解なら次の問題を送信
+            await botClient.pushMessage(userId, buildText('せいかい！'));
+            currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+            pushQuiz(userId);
+        } else {
+            // 不正解なら今の問題を送信
+            await botClient.pushMessage(userId, buildText('はずれ！'));
+            pushQuiz(userId);
+        }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (CMD_RESTART):
-                if (!!userId) {
-                    quizProvider.init();
-                    currentQuiz = quizProvider.next();
-                    const message: FlexMessage = buildForm(currentQuiz);
-                    await botClient.pushMessage(userId, message);
-                }
+                quizProvider.init();
+                currentQuiz = quizProvider.next();
+                pushQuiz(userId);
                 break;
             case (CMD_DETAIL):
+                await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (CMD_NEXT):
-                if (!!userId) {
-                    currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
-                    const message: FlexMessage = buildForm(currentQuiz);
-                    await botClient.pushMessage(userId, message);
-                }
+                currentQuiz = quizProvider.hasNext() ? quizProvider.next() : currentQuiz;
+                pushQuiz(userId);
                 break;
         }
     }
 }
 
 // 睡眠クイズを返す。
-async function pushQuiz(event: MessageEvent) {
-    const userId: string | undefined = event.source.userId;
-    if (!!userId) {
-        await botClient.pushMessage(userId, buildForm(currentQuiz));
+async function pushQuiz(userId: string | undefined) {
+    if (!userId) {
+        return;
     }
+    await botClient.pushMessage(userId, buildQuizForm(currentQuiz));
 }
 
 // チェックリストを返す。
@@ -142,11 +148,7 @@ async function replayChecklist(event: MessageEvent, text: string) {
     checklist.reply(userId, text);
 }
 
-// 「回答」を入力されていればtrue
-function isAnswerText(txt: string): boolean {
-    return txt === CMD_MARU || txt === CMD_BATSU;
-}
-
+// テキストメッセージを返す。最大2000文字
 function buildText(t: string): TextMessage {
     return {
         type: 'text',
@@ -154,7 +156,7 @@ function buildText(t: string): TextMessage {
     };
 }
 
-function buildForm(q: Quiz): FlexMessage {
+function buildQuizForm(q: Quiz): FlexMessage {
     const flexHeaderContents: FlexText = {
         type: 'text',
         text: `問題${q.getNo()}`,
