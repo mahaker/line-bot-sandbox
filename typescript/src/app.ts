@@ -5,7 +5,7 @@ import Express, { Request, Response } from 'express';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
-    TextMessage, PostbackEvent,
+    TextEventMessage, TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
 } from '@line/bot-sdk';
 
@@ -49,7 +49,14 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
     if (event.type === 'postback') {
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
-        pushQuiz(event);
+        const _event: MessageEvent = event as MessageEvent;
+        const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
+        
+        if (_textEventMessage.text === 'クイズ') {
+            pushQuiz(_event);
+        } else if (_textEventMessage.text === 'チェックリスト') {
+            pushChecklist(_event);
+        }
     }
 }
 
@@ -84,12 +91,18 @@ async function handleRichMenuAction(event: PostbackEvent) {
     }
 }
 
-// 普通のテキスト入力
+// 睡眠クイズを返す。 
 async function pushQuiz(event: MessageEvent) {
     const userId: string | undefined = event.source.userId;
     if (!!userId) {
         await botClient.pushMessage(userId, buildForm(currentQuiz));
     }
+}
+
+// チェックリストを返す。
+async function pushChecklist(event: MessageEvent) {
+    // Push checklist
+    console.log('checklist');
 }
 
 // 「回答」を入力されていればtrue
