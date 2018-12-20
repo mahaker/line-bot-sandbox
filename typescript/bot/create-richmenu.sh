@@ -23,7 +23,6 @@ if [ "$DEFAULT_RICHMENU_ID" != 'null' ]; then
   curl -s -X DELETE https://api.line.me/v2/bot/user/all/richmenu -H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN"
 fi
 
-# TODO リッチメニューの画像を設定
 # TODO リッチメニューとユーザーのリンク
 
 # リッチメニューの作成
@@ -109,11 +108,10 @@ NEW_RICHMENU_ID=`curl -v -X POST https://api.line.me/v2/bot/richmenu \
 }' | jq -r ".richMenuId"`
 
 # リッチメニューに画像を設定
-# {"richMenuId":"richmenu-bf8cd011641159740b4227974251f7a5"} のようなレスポンスが返ってくるのでどこかに控えておく
-# curl -v -X POST https://api.line.me/v2/bot/richmenu/{richMenuId}/content \
-# -H "Authorization: Bearer {channel access token}" \
-# -H "Content-Type: image/jpeg" \
-# -T ../image/answer-button-richmenu.jpg
+curl -v -X POST https://api.line.me/v2/bot/richmenu/{richMenuId}/content \
+-H "Authorization: Bearer $CHANNEL_ACCESS_TOKEN" \
+-H "Content-Type: image/jpeg" \
+-T $IMAGE_PATH 
 
 # ボットとリッチメニューを関連づけ
 # useridはボットの「チャネル基本設定」画面の最下部にある。
