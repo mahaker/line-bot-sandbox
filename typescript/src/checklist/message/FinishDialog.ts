@@ -29,6 +29,9 @@ export default class FinishDialog {
       const part = `${caption}:${count}`;
       resTexts.push(part);
     }
-    return resTexts.join(', ');
+    const counts = resTexts.join(', ');
+    const point = checkListResult.calculatePoint();
+    const maxPoint = checkListResult.maxPoint();
+    return counts + `, 健全度:${point}P(最大:${maxPoint}P)`;
   }
 }
