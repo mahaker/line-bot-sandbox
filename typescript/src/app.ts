@@ -75,7 +75,7 @@ function handleEvent(event: MessageEvent | PostbackEvent) {
         const postback = event.postback;
         console.log('postback.data の内容:' + postback.data);
 
-        handleRichMenuAction(event);
+        // handleRichMenuAction(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
