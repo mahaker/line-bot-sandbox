@@ -1,51 +1,59 @@
-import { Client } from '@line/bot-sdk';
-import CheckListQuestions from './CheckListQuestions';
-import CheckListResults from './CheckListResults';
-import CheckResult from './CheckResult';
+import { Client, PostbackEvent } from '@line/bot-sdk';
+import CheckDialog from './message/CheckDialog';
+import CheckListQuestions from './domain/CheckListQuestions';
+import CheckListResults from './domain/CheckListResults';
+import MessageInnerData from './message/MessageInnerData';
+import FinishDialog from './message/FinishDialog';
+import PlainMessage from './message/PlainMessage';
 
 export default class CheckListInterlocutor {
-  private static readonly RESULT_CHAR: { [key: string]: CheckResult } = {
-    '×': CheckResult.Bad,
-    '△': CheckResult.Usual,
-    '○': CheckResult.Good
-  };
-
   private readonly questions = new CheckListQuestions();
-  private readonly checkListResults = new CheckListResults();
+  private readonly results = new CheckListResults();
 
   constructor(private botClient: Client) {}
 
-  public start(userId: string): void {
-    this.checkListResults.initilize(userId);
-    const nowNumber = this.checkListResults.nowNumber(userId);
-    this.displayQuestion(nowNumber);
+  public async start(userId: string) {
+    this.results.initilize(userId);
+    const nowNumber = this.results.nowNumber(userId);
+    await this.displayStart(userId);
+    await this.displayQuestion(userId, nowNumber);
   }
 
-  public reply(userId: string, resultText: string) {
-    const result = CheckListInterlocutor.RESULT_CHAR[resultText];
-    if (!result) return;
-    if (!this.checkListResults.existsCheckList(userId)) return;
+  public reply(userId: string, event: PostbackEvent) {
+    const messageData = MessageInnerData.parse(event.postback.data);
+    if (!messageData) return;
+    if (!this.results.existsCheckList(userId)) return;
+    const nowNumber = this.results.nowNumber(userId);
+    if (nowNumber !== messageData.questionNumber) return;
 
-    this.checkListResults.recordResult(userId, result);
+    this.results.recordResult(userId, messageData.checkResult);
 
-    const nowNumber = this.checkListResults.nowNumber(userId);
-    if (this.questions.isFinished(nowNumber)) {
+    const nextNumber = this.results.nowNumber(userId);
+    if (this.questions.isFinished(nextNumber)) {
       this.diplayFinish(userId);
       return;
     }
-    this.displayQuestion(nowNumber);
+    this.displayQuestion(userId, nextNumber);
   }
 
-  private displayQuestion(questionNumber: number) {
-    // TODO ちゃんとダイアログにする。
+  private async displayStart(userId: string) {
+    const qCount = this.questions.count();
+    let content = `これから「生活習慣チェック」を始めます。(チェック項目:${qCount})\n`;
+    content += 'チェック項目の下のボタンを押して、項目を進めてください。';
+    const message = new PlainMessage(this.botClient);
+    await message.show(userId, content);
+  }
+
+  private async displayQuestion(userId: string, questionNumber: number) {
     const qText = this.questions.get(questionNumber);
-    console.log(`${questionNumber} 問目 : ${qText}`);
+    const dialog = new CheckDialog(this.botClient, questionNumber, qText);
+    await dialog.show(userId);
   }
 
   private diplayFinish(userId: string) {
-    this.checkListResults.goal(userId);
-    // TODO おめでとうございます！処理
-    console.log('おめでとうございます！チェック終わりました。');
+    const result = this.results.goal(userId);
+    const dialog = new FinishDialog(this.botClient);
+    dialog.show(result);
     // XXX 「記録をどこかに残すようなボット」にするなら、チェックの結果をここで永続化するようにする
   }
 }

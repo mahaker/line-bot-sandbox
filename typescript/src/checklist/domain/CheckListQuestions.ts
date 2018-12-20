@@ -19,7 +19,10 @@ export default class CheckListQuestions {
     return CheckListQuestions.Q_TEXTS[questionNumber - 1];
   }
 
+  public count(): number {
+    return CheckListQuestions.Q_TEXTS.length;
+  }
   public isFinished(questionNumber: number): boolean {
-    return CheckListQuestions.Q_TEXTS.length < questionNumber;
+    return this.count() < questionNumber;
   }
 }
