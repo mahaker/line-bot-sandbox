@@ -23,12 +23,8 @@ export default class CheckListInterlocutor {
 
   public reply(userId: string, resultText: string) {
     const result = CheckListInterlocutor.RESULT_CHAR[resultText];
-    if (!result) {
-      return;
-    }
-    if (!this.checkListResults.existsCheckList(userId)) {
-      return;
-    }
+    if (!result) return;
+    if (!this.checkListResults.existsCheckList(userId)) return;
     this.checkListResults.recordResult(userId, result);
     const nowNumber = this.checkListResults.nowNumber(userId);
     if (this.questions.isFinished(nowNumber)) {

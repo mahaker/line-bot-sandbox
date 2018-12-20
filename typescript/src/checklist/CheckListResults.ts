@@ -10,9 +10,7 @@ export default class CheckListResults {
 
   public nowNumber(userId: string): number {
     const result = this.userResults[userId];
-    if (!result) {
-      return 0;
-    }
+    if (!result) return 0;
     return result.nowNumber();
   }
 
