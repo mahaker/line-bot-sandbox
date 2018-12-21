@@ -4,6 +4,7 @@ import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
 import Express, { Request, Response } from 'express';
 import CheckListInterlocutor from './checklist/CheckListInterlocutor';
+import MessageInnerData from './checklist/message/MessageInnerData';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
@@ -22,6 +23,7 @@ import {
  * 点数（正解だったクイズ）を表示する。
 　 まずは全問回答する、という前提で。
 　 スキップ（次のクイズ）が押される考慮
+ * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
  */
 
 const clientConfig: ClientConfig = {
@@ -68,8 +70,11 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     if (event.type === 'postback') {
-        if (replayChecklist(event)) return;
-        handleRichMenuAction(event);
+        if (MessageInnerData.parse(event.postback.data) !== undefined) {
+            replayChecklist(event);
+        } else {
+            handleQuizControl(event)
+        }
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
@@ -85,7 +90,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
 }
 
 // リッチメニュー上からのアクション
-async function handleRichMenuAction(event: PostbackEvent) {
+async function handleQuizControl(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
