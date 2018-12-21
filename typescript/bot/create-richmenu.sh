@@ -37,24 +37,76 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
 -d \
 '{
   "size": {
-    "width": ,
-    "height": 
+    "width": 2500,
+    "height": 1686
   },
-  "selected": ,
-  "name": "",
-  "chatBarText": "",
+  "selected": true,
+  "name": "リッチメニュー 1",
+  "chatBarText": "お知らせ",
   "areas": [
     {
-      "bounds: {
-        "x": ,
-        "y": ,
-        "width": ,
-        "height":
+      "bounds": {
+        "x": 2,
+        "y": 4,
+        "width": 1316,
+        "height": 1118
       },
       "action": {
-        "type": "",
-        "displayText": "",
-        "data": ""
+        "type": "postback",
+        "text": "まる",
+        "data": "{\"cmd\": \"answer\", \"answer\": true}"
+      }
+    },
+    {
+      "bounds": {
+        "x": 1320,
+        "y": 4,
+        "width": 1174,
+        "height": 1116
+      },
+      "action": {
+        "type": "postback",
+        "text": "ばつ",
+        "data": "{\"cmd\": \"answer\", \"answer\": false}"
+      }
+    },
+    {
+      "bounds": {
+        "x": 4,
+        "y": 1127,
+        "width": 812,
+        "height": 559
+      },
+      "action": {
+        "type": "postback",
+        "text": "はじめから",
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"restart\"}"
+      }
+    },
+    {
+      "bounds": {
+        "x": 818,
+        "y": 1125,
+        "width": 915,
+        "height": 559
+      },
+      "action": {
+        "type": "postback",
+        "text": "くわしく見る",
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"detail\"}"
+      }
+    },
+    {
+      "bounds": {
+        "x": 1735,
+        "y": 1120,
+        "width": 765,
+        "height": 566
+      },
+      "action": {
+        "type": "postback",
+        "text": "次のクイズ",
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"next\"}"
       }
     }
   ]
