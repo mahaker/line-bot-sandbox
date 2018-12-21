@@ -34,8 +34,12 @@ export default class Kani implements Provider {
         return this.quizzes[this.index];
     }
 
+    current(): Quiz {
+        return this.quizzes[this.index];
+    }
+
     hasNext(): boolean {
-        return this.quizzes.length > this.index;
+        return this.quizzes.length - 1 > this.index;
     }
 
     next(): Quiz {
