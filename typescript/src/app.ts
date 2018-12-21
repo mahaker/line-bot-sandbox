@@ -69,7 +69,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
 
     if (event.type === 'postback') {
         if (replayChecklist(event)) return;
-        handleRichMenuAction(event);
+        handleQuizControl(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
@@ -85,7 +85,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
 }
 
 // リッチメニュー上からのアクション
-async function handleRichMenuAction(event: PostbackEvent) {
+async function handleQuizControl(event: PostbackEvent) {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
