@@ -53,7 +53,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "text": "まる",
+        "displayText": "まる",
         "data": "{\"cmd\": \"answer\", \"answer\": true}"
       }
     },
@@ -66,7 +66,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "text": "ばつ",
+        "displayText": "ばつ",
         "data": "{\"cmd\": \"answer\", \"answer\": false}"
       }
     },
@@ -79,7 +79,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "text": "はじめから",
+        "displayText": "はじめから",
         "data": "{\"cmd\": \"ctrl\", \"action\": \"restart\"}"
       }
     },
@@ -92,7 +92,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "text": "くわしく見る",
+        "displayText": "くわしく見る",
         "data": "{\"cmd\": \"ctrl\", \"action\": \"detail\"}"
       }
     },
@@ -105,7 +105,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "text": "次のクイズ",
+        "displayText": "次のクイズ",
         "data": "{\"cmd\": \"ctrl\", \"action\": \"next\"}"
       }
     }
