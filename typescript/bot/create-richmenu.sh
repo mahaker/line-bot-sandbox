@@ -42,7 +42,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
   },
   "selected": true,
   "name": "リッチメニュー 1",
-  "chatBarText": "お知らせ",
+  "chatBarText": "クイズコントロール",
   "areas": [
     {
       "bounds": {
