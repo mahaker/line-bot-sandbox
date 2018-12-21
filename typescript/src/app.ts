@@ -93,6 +93,7 @@ async function handleQuizControl(event: PostbackEvent): Promise<boolean> {
         return false;
     }
 
+    console.log(`data.label: ${data.label}`);
     if (data.label !== 'quiz') return false;
 
     const quizProvider: Provider | undefined = userProviderMap.get(userId);
