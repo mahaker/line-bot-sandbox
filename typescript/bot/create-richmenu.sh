@@ -54,7 +54,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       "action": {
         "type": "postback",
         "displayText": "まる",
-        "data": "{\"cmd\": \"answer\", \"answer\": true}"
+        "data": "{\"label\": \"quiz\", \"cmd\": \"answer\", \"answer\": true}"
       }
     },
     {
@@ -67,7 +67,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       "action": {
         "type": "postback",
         "displayText": "ばつ",
-        "data": "{\"cmd\": \"answer\", \"answer\": false}"
+        "data": "{\"label\": \"quiz\", \"cmd\": \"answer\", \"answer\": false}"
       }
     },
     {
@@ -80,7 +80,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       "action": {
         "type": "postback",
         "displayText": "はじめから",
-        "data": "{\"cmd\": \"ctrl\", \"action\": \"restart\"}"
+        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"restart\"}"
       }
     },
     {
@@ -93,7 +93,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       "action": {
         "type": "postback",
         "displayText": "くわしく見る",
-        "data": "{\"cmd\": \"ctrl\", \"action\": \"detail\"}"
+        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"detail\"}"
       }
     },
     {
@@ -106,7 +106,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       "action": {
         "type": "postback",
         "displayText": "次のクイズ",
-        "data": "{\"cmd\": \"ctrl\", \"action\": \"next\"}"
+        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"next\"}"
       }
     }
   ]

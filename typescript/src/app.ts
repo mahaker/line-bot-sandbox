@@ -68,8 +68,8 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     if (event.type === 'postback') {
+        if (await handleQuizControl(event)) return;
         if (replayChecklist(event)) return;
-        handleQuizControl(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
@@ -85,17 +85,19 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
 }
 
 // リッチメニュー上からのアクション
-async function handleQuizControl(event: PostbackEvent) {
+async function handleQuizControl(event: PostbackEvent): Promise<boolean> {
     const userId: string | undefined = event.source.userId;
     const data = JSON.parse(event.postback.data);
 
     if (!userId) {
-        return;
+        return false;
     }
+
+    if (data.label !== 'quiz') return false;
 
     const quizProvider: Provider | undefined = userProviderMap.get(userId);
     if (!quizProvider) {
-        return;
+        return false;
     }
     const currentQuiz: Quiz = quizProvider.current();
 
@@ -129,6 +131,7 @@ async function handleQuizControl(event: PostbackEvent) {
                 break;
         }
     }
+    return true;
 }
 
 // 睡眠クイズを返す。
