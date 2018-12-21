@@ -1,6 +1,7 @@
 import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
+import { Command } from './cmd/Command';
 import Express, { Request, Response } from 'express';
 import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import {
@@ -21,7 +22,6 @@ import {
  * 点数（正解だったクイズ）を表示する。
 　 まずは全問回答する、という前提で。
 　 スキップ（次のクイズ）が押される考慮
- * CMD_* をEnumにする
  */
 
 const clientConfig: ClientConfig = {
@@ -36,9 +36,6 @@ const botMiddleware = middleware(middlewareConfig);
 
 const app = Express();
 
-const CMD_RESTART = 'restart';
-const CMD_DETAIL = 'detail';
-const CMD_NEXT = 'next';
 const QUIZ_PROVIDER: Provider = new Kani();
 
 // ユーザーとcurrentQuizのマッピング
@@ -117,14 +114,14 @@ async function handleRichMenuAction(event: PostbackEvent) {
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
-            case (CMD_RESTART):
+            case (Command.RESTART):
                 quizProvider.init();
                 pushQuiz(userId);
                 break;
-            case (CMD_DETAIL):
+            case (Command.DETAIL):
                 await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
-            case (CMD_NEXT):
+            case (Command.NEXT):
                 if (quizProvider.hasNext()) {
                     quizProvider.next();
                 }
