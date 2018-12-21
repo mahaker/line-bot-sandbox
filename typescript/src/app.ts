@@ -2,6 +2,7 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import Express, { Request, Response } from 'express';
+import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     MessageEvent,
@@ -43,6 +44,8 @@ const QUIZ_PROVIDER: Provider = new Kani();
 // ユーザーとcurrentQuizのマッピング
 const userProviderMap = new Map<string, Provider>();
 
+const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
+
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
 app.get('/', (request: Request, response: Response) => {
     return response.send('Hello mahaker!!');
@@ -60,9 +63,7 @@ app.post('/webhook', botMiddleware, (request: Request, response: Response) => {
 
 async function handleEvent(event: MessageEvent | PostbackEvent) {
     const userId: string | undefined = event.source.userId;
-    if (!userId) {
-        return;
-    }
+    if (!userId) return;
 
     // 初めてボットを利用するユーザーはMapに追加
     if (userProviderMap.get(userId) === undefined) {
@@ -70,15 +71,16 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     if (event.type === 'postback') {
+        if (replayChecklist(event)) return;
         handleRichMenuAction(event);
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
         const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
-        
+
         if (_textEventMessage.text === 'クイズ') {
             pushQuiz(userId);
         } else if (_textEventMessage.text === 'チェックリスト') {
-            pushChecklist(_event);
+            await pushChecklist(_event);
         } else {
             await botClient.pushMessage(userId, buildText('不正な入力です。クイズをする場合は「クイズ」、チェックリストをする場合は「チェックリスト」と入力してください。'));
         }
@@ -132,7 +134,7 @@ async function handleRichMenuAction(event: PostbackEvent) {
     }
 }
 
-// 睡眠クイズを返す。 
+// 睡眠クイズを返す。
 async function pushQuiz(userId: string) {
     const provider: Provider | undefined = userProviderMap.get(userId);
     if (provider === undefined) {
@@ -144,8 +146,17 @@ async function pushQuiz(userId: string) {
 
 // チェックリストを返す。
 async function pushChecklist(event: MessageEvent) {
-    // Push checklist
-    console.log('checklist');
+    const userId = event.source.userId;
+    if (!userId) return;
+    await checklist.start(userId);
+}
+
+// チェックリストの返答なら処理する。
+function replayChecklist(event: PostbackEvent): boolean {
+    const userId = event.source.userId;
+    if (!userId) return false;
+    checklist.reply(userId, event);
+    return true;
 }
 
 // テキストメッセージを返す。最大2000文字
