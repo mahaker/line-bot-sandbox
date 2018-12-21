@@ -21,6 +21,8 @@ export default class CheckListInterlocutor {
 
     public reply(userId: string, event: PostbackEvent) {
         const messageData = MessageInnerData.parse(event.postback.data);
+        console.log(`data: ${event.postback.data}`);
+        console.log(`messageData: ${messageData}`);
         if (!messageData) return;
         if (!this.results.existsCheckList(userId)) return;
         const nowNumber = this.results.nowNumber(userId);

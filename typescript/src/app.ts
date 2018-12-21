@@ -68,6 +68,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
 
     if (event.type === 'postback') {
+        console.log('here');
         if (await handleQuizControl(event)) return;
         if (replayChecklist(event)) return;
     } else if (event.type === 'message') {
