@@ -88,6 +88,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
 // リッチメニュー上からのアクション
 async function handleQuizControl(event: PostbackEvent): Promise<boolean> {
     const userId: string | undefined = event.source.userId;
+    console.log(`data: ${event.postback.data}`);
     const data = JSON.parse(event.postback.data);
 
     if (!userId) {

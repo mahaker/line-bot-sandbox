@@ -20,7 +20,6 @@ export default class CheckListInterlocutor {
     }
 
     public reply(userId: string, event: PostbackEvent) {
-        console.log(`data: ${event.postback.data}`);
         const messageData = MessageInnerData.parse(event.postback.data);
         if (!messageData) return;
         if (!this.results.existsCheckList(userId)) return;
