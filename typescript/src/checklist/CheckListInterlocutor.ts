@@ -30,8 +30,8 @@ export default class CheckListInterlocutor {
 
         const nextNumber = this.results.nowNumber(userId);
         if (this.questions.isFinished(nextNumber)) {
-        this.diplayFinish(userId);
-        return;
+            this.diplayFinish(userId);
+            return;
         }
         this.displayQuestion(userId, nextNumber);
     }

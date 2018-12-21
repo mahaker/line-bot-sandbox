@@ -6,7 +6,7 @@ import CheckResult from '../domain/CheckResult';
 export default class MessageInnerData {
     public static parse(data: string): MessageInnerData | undefined {
         if (data.indexOf(MessageInnerData.MESSAGE_DATA_PREFIX) !== 0)
-        return undefined;
+            return undefined;
         const values = data.split(',');
         const questionNumber = Number(values[1]);
         const checkResult = values[2] as CheckResult;
@@ -17,14 +17,14 @@ export default class MessageInnerData {
 
     constructor(
         public readonly questionNumber: number,
-        public readonly checkResult: CheckResult
+        public readonly checkResult: CheckResult,
     ) {}
 
     public serialize(): string {
         const values = [
-        MessageInnerData.MESSAGE_DATA_PREFIX,
-        this.questionNumber,
-        this.checkResult,
+            MessageInnerData.MESSAGE_DATA_PREFIX,
+            this.questionNumber,
+            this.checkResult,
         ];
         return values.join(',');
     }

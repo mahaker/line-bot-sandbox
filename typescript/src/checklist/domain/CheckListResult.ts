@@ -27,12 +27,12 @@ export default class CheckListResult {
         let index = -1;
         let point = 0;
         for (const item in CheckResult) {
-        index++;
-        const level = resultTypeLength - index;
-        const resultType = item as CheckResult;
+            index++;
+            const level = resultTypeLength - index;
+            const resultType = item as CheckResult;
 
-        const count = this.countOf(resultType);
-        point += level * count;
+            const count = this.countOf(resultType);
+            point += level * count;
         }
         return point;
     }
