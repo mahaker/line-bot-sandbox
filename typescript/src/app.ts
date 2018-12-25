@@ -106,7 +106,7 @@ async function handleQuizControl(event: PostbackEvent) {
 
     if (data.cmd === 'answer') {
         if (currentQuiz.isCorrect(data.answer)) {
-             await botClient.pushMessage(userId, buildText('せいかい！'));
+            await botClient.pushMessage(userId, buildText('せいかい！'));
             if (quizProvider.hasNext()) {
                 quizProvider.next();
                 pushQuiz(userId);
