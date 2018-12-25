@@ -19,7 +19,7 @@
 1-4. アプリの設定にある`Domain`を記録しておく。（2-6で使用する）
 ![heroku-domain](image/setting/heroku-domain.jpg)
 
-## 2. LINE Botのチャネルを作成する。
+## 2. LINE Botのチャネルを作成する。
 
 2-1. [LINE Developers](https://developers.line.biz/ja/)へログインする。
 
@@ -30,7 +30,7 @@
 2-4. プロバイダーを作成できたら、チャネルを作成する。
 ![create-new-channel](image/setting/create-new-channel.jpg)
 
-2-5. チャネルの情報を入力し、チャネルを作成する。
+2-5. チャネルの情報を入力し、チャネルを作成する。
 #### ！プランを「Developer Trial」にすること！
 ![channel-info-2](image/setting/channel-info-2.jpg)
 
@@ -39,7 +39,7 @@
 変更箇所
 - アクセストークン: 再発行（`執行までの時間`は0時間後でOK）
 - Webhook送信: 利用する
-- Webhook URL: 1-4で設定されたDomain + `/webhook`を入力する。（先頭の`https://`は削除する。）
+- Webhook URL: 1-4で設定されたDomain + `/webhook`を入力する。（先頭の`https://`は削除する。）
 - 自動応答メッセージ: 利用しない
 
 ![channel-settings-1](image/setting/channel-settings-1.jpg)
