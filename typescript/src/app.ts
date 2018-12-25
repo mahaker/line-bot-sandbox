@@ -106,9 +106,8 @@ async function handleQuizControl(event: PostbackEvent) {
 
     if (data.cmd === 'answer') {
         if (currentQuiz.isCorrect(data.answer)) {
-            // 正解、かつ最後の問題でなければ次の問題を送信
+             await botClient.pushMessage(userId, buildText('せいかい！'));
             if (quizProvider.hasNext()) {
-                await botClient.pushMessage(userId, buildText('せいかい！'));
                 quizProvider.next();
                 pushQuiz(userId);
             } else {
@@ -133,7 +132,7 @@ async function handleQuizControl(event: PostbackEvent) {
                     quizProvider.next();
                     pushQuiz(userId);
                 } else {
-                    await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
+                    await botClient.pushMessage(userId, buildText('最後の問題です。'));
                 }
                 break;
         }
