@@ -2,6 +2,7 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
+import Point from './quiz/Point';
 import Express, { Request, Response } from 'express';
 import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import MessageInnerData from './checklist/message/MessageInnerData';
@@ -19,9 +20,6 @@ import {
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
- * 点数（正解だったクイズ）を表示する。
-　 まずは全問回答する、という前提で。
-　 スキップ（次のクイズ）が押される考慮
  * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
  */
 
@@ -41,6 +39,9 @@ const QUIZ_PROVIDER: Provider = new Kani();
 
 // ユーザーとcurrentQuizのマッピング
 const userProviderMap = new Map<string, Provider>();
+
+// ユーザーと点数（point）のマッピング
+const userPointMap = new Map<string, Point>();
 
 const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
 
@@ -66,6 +67,9 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     // 初めてボットを利用するユーザーはMapに追加
     if (userProviderMap.get(userId) === undefined) {
         userProviderMap.set(userId, QUIZ_PROVIDER);
+    }
+    if (userPointMap.get(userId) === undefined) {
+        userPointMap.set(userId, new Point());
     }
 
     if (event.type === 'postback') {
@@ -101,25 +105,35 @@ async function handleQuizControl(event: PostbackEvent) {
     if (!quizProvider) {
         return;
     }
+
+    const point: Point | undefined = userPointMap.get(userId);
+    if (!point) {
+        return;
+    }
     const currentQuiz: Quiz = quizProvider.current();
 
     if (data.cmd === 'answer') {
+        let isCorrect = '';
         if (currentQuiz.isCorrect(data.answer)) {
-            await botClient.pushMessage(userId, buildText('せいかい！'));
-            if (quizProvider.hasNext()) {
-                quizProvider.next();
-                pushQuiz(userId);
-            } else {
-                await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
-            }
+            isCorrect = 'せいかい！';
+            point.increment();
         } else {
-            // 不正解なら今の問題を送信
-            await botClient.pushMessage(userId, buildText('はずれ！'));
+            isCorrect = 'はずれ！';
+        }
+        await botClient.pushMessage(userId, buildText(isCorrect));
+
+        if (quizProvider.hasNext()) {
+            quizProvider.next();
             pushQuiz(userId);
+        } else {
+            await botClient.pushMessage(userId, buildText(`最後の問題です。点数は ${point.get()} 点でした！`));
+            quizProvider.init();
+            point.init();
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (Command.RESTART):
+                point.init();
                 quizProvider.init();
                 pushQuiz(userId);
                 break;
@@ -131,6 +145,7 @@ async function handleQuizControl(event: PostbackEvent) {
                     quizProvider.next();
                     pushQuiz(userId);
                 } else {
+                    pushQuiz(userId);
                     await botClient.pushMessage(userId, buildText('最後の問題です。'));
                 }
                 break;
