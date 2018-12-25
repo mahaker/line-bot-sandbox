@@ -3,8 +3,8 @@
 ## 必要なもの
 - git
 - LINEアカウント
-- Herokuアカウント
-- heroku cli
+- [Herokuアカウント](https://jp.heroku.com/)
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
 
 ## 1. Herokuでアプリを作成する。
 
