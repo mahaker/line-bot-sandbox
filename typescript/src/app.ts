@@ -146,6 +146,7 @@ async function handleQuizControl(event: PostbackEvent) {
                     quizProvider.next();
                     pushQuiz(userId);
                 } else {
+                    pushQuiz(userId);
                     await botClient.pushMessage(userId, buildText('最後の問題です。'));
                 }
                 break;
