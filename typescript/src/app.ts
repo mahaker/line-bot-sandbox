@@ -2,6 +2,7 @@ import Provider from './quiz/Provider';
 import Quiz from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
+import Point from './quiz/Point';
 import Express, { Request, Response } from 'express';
 import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import MessageInnerData from './checklist/message/MessageInnerData';
@@ -42,6 +43,9 @@ const QUIZ_PROVIDER: Provider = new Kani();
 // ユーザーとcurrentQuizのマッピング
 const userProviderMap = new Map<string, Provider>();
 
+// ユーザーと点数（point）のマッピング
+const userPointMap = new Map<string, Point>();
+
 const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
@@ -66,6 +70,9 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     // 初めてボットを利用するユーザーはMapに追加
     if (userProviderMap.get(userId) === undefined) {
         userProviderMap.set(userId, QUIZ_PROVIDER);
+    }
+    if (userPointMap.get(userId) === undefined) {
+        userPointMap.set(userId, new Point());
     }
 
     if (event.type === 'postback') {
@@ -101,17 +108,28 @@ async function handleQuizControl(event: PostbackEvent) {
     if (!quizProvider) {
         return;
     }
+
+    const point: Point | undefined = userPointMap.get(userId);
+    if (!point) {
+        return;
+    }
     const currentQuiz: Quiz = quizProvider.current();
 
     if (data.cmd === 'answer') {
-        const isCorrect = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
+        let isCorrect = '';
+        if (currentQuiz.isCorrect(data.answer)) {
+            isCorrect = 'せいかい！';
+            point.increment();
+        } else {
+            isCorrect = 'はずれ！';
+        }
         await botClient.pushMessage(userId, buildText(isCorrect));
 
         if (quizProvider.hasNext()) {
             quizProvider.next();
             pushQuiz(userId);
         } else {
-            await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
+            await botClient.pushMessage(userId, buildText(`最後の問題です。点数は ${point.get()} 点でした！`));
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
