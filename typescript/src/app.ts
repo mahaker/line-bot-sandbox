@@ -106,12 +106,14 @@ async function handleQuizControl(event: PostbackEvent) {
 
     if (data.cmd === 'answer') {
         if (currentQuiz.isCorrect(data.answer)) {
-            // 正解なら次の問題を送信
-            await botClient.pushMessage(userId, buildText('せいかい！'));
+            // 正解、かつ最後の問題でなければ次の問題を送信
             if (quizProvider.hasNext()) {
+                await botClient.pushMessage(userId, buildText('せいかい！'));
                 quizProvider.next();
+                pushQuiz(userId);
+            } else {
+                await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
             }
-            pushQuiz(userId);
         } else {
             // 不正解なら今の問題を送信
             await botClient.pushMessage(userId, buildText('はずれ！'));
@@ -129,8 +131,10 @@ async function handleQuizControl(event: PostbackEvent) {
             case (Command.NEXT):
                 if (quizProvider.hasNext()) {
                     quizProvider.next();
+                    pushQuiz(userId);
+                } else {
+                    await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
                 }
-                pushQuiz(userId);
                 break;
         }
     }
