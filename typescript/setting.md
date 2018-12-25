@@ -2,7 +2,7 @@
 
 ## 1. Herokuでアプリを作成する。
 
-![heroku-new])(./typescript/image/setting/heroku-new.jpg)
+![heroku-new])(image/setting/heroku-new.jpg)
 
 ## 2. LINE Botのチャネルを作成する。
 
