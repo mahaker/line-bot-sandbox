@@ -104,18 +104,14 @@ async function handleQuizControl(event: PostbackEvent) {
     const currentQuiz: Quiz = quizProvider.current();
 
     if (data.cmd === 'answer') {
-        if (currentQuiz.isCorrect(data.answer)) {
-            await botClient.pushMessage(userId, buildText('せいかい！'));
-            if (quizProvider.hasNext()) {
-                quizProvider.next();
-                pushQuiz(userId);
-            } else {
-                await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
-            }
-        } else {
-            // 不正解なら今の問題を送信
-            await botClient.pushMessage(userId, buildText('はずれ！'));
+        const isCorrect = currentQuiz.isCorrect(data.answer)? 'せいかい！' : 'はずれ！';
+        await botClient.pushMessage(userId, buildText(isCorrect));
+
+        if (quizProvider.hasNext()) {
+            quizProvider.next();
             pushQuiz(userId);
+        } else {
+            await botClient.pushMessage(userId, buildText('最後の問題です。お疲れ様でした。'));
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
