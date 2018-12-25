@@ -134,6 +134,7 @@ async function handleQuizControl(event: PostbackEvent) {
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
             case (Command.RESTART):
+                point.init();
                 quizProvider.init();
                 pushQuiz(userId);
                 break;
