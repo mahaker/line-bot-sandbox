@@ -75,7 +75,7 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
         if (MessageInnerData.parse(event.postback.data) !== undefined) {
             replayChecklist(event);
         } else {
-            handleQuizControl(event)
+            handleQuizControl(event);
         }
     } else if (event.type === 'message') {
         const _event: MessageEvent = event as MessageEvent;
