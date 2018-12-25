@@ -130,6 +130,8 @@ async function handleQuizControl(event: PostbackEvent) {
             pushQuiz(userId);
         } else {
             await botClient.pushMessage(userId, buildText(`最後の問題です。点数は ${point.get()} 点でした！`));
+            quizProvider.init();
+            point.init();
         }
     } else if (data.cmd === 'ctrl') {
         switch (data.action) {
