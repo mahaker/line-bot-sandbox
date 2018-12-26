@@ -24,7 +24,6 @@ export default class Kani implements Provider {
             true),
     ];
 
-    // TODO 親クラスに移譲したい
     public getQuizByNo(no: number): Quiz | undefined {
         return this.quizzes.find(q => q.getNo() === no);
     }

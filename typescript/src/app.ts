@@ -34,7 +34,7 @@ const app = Express();
 
 const QUIZ_PROVIDER: Provider = new Kani();
 
-// ユーザーとcurrentQuizのマッピング
+// ユーザーとProviderのマッピング
 const userProviderMap = new Map<string, Provider>();
 
 // ユーザーと点数（point）のマッピング
