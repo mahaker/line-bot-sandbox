@@ -2,6 +2,15 @@
 
 [line-bot-sdk-nodejs](https://github.com/line/line-bot-sdk-nodejs)
 
+## What is this?
+
+睡眠クイズ（全3問）を出してくれるボット
+
+- トークで「クイズ」と話しかけるとクイズスタート
+- 回答はリッチメニューの【⭕️】と【❌】で行う。
+
+![screenshot](image/screenshot.gif)
+
 ## Set up
 
 Please see [setting.md](./setting.md)
