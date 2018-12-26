@@ -13,6 +13,9 @@ LINEボットのリッチメニューを簡単に作成するためのスクリ�
 スクリーンショット
 ![bot-desiner](../image/create-richmenu/bot-designer.jpg)
 
+サンプル<br>
+line-bot-sandbox/typescript/bot/botDesignerSample.lbd
+
 画像を選択し、その上に領域を作っていきます。
 領域には`アクション`を設定します。<br>
 領域がタップされた時に、その領域に設定したアクションが実行されます。
@@ -20,8 +23,6 @@ LINEボットのリッチメニューを簡単に作成するためのスクリ�
 
 領域を作っていくと、画面右下の`JSON`の中身が更新されていきます。<br>
 create-richmenu.sh#38行目の-d オプションに、JSONを貼り付けてください。
-
-line-bot-sandbox/typescript/bot/botDesignerSample.lbdを参考にしてください。
 
 ## 2. リッチメニューの背景画像を作成する。
 
