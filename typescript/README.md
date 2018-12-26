@@ -6,6 +6,11 @@
 
 Please see [setting.md](./setting.md)
 
+## Create richmenu 
+
+Please see [bot/README.md](./bot/README.md)
+
+
 ## Development
 
 ``` sh
