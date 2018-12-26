@@ -18,7 +18,7 @@ LINEボットのリッチメニューを簡単に作成するためのスクリ�
 領域がタップされた時に、その領域に設定したアクションが実行されます。
 [アクションについて](https://developers.line.biz/ja/reference/messaging-api/#anchor-9f998a990ea665f62325797de3a58e17d0ea79c8)
 
-領域を作っていくと、画面右下の`JSON`の中身が更新されていきます。
+領域を作っていくと、画面右下の`JSON`の中身が更新されていきます。<br>
 create-richmenu.sh#38行目の-d オプションに、JSONを貼り付けてください。
 
 line-bot-sandbox/typescript/bot/botDesignerSample.lbdを参考にしてください。
