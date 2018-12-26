@@ -34,7 +34,7 @@ line-bot-sandbox/typescript/bot/botDesignerSample.lbdを参考にしてくださ
 ## 3. ボットのアクセストークン、ユーザーIDを取得する。
 
 いずれもチャネル基本設定画面より取得できます。<br>
-注) ユーザーIDは、基本設定画面の最下部にある`Your user ID`です。
+注) ユーザーIDは、基本設定画面の最下部にある`Your user ID`です。
 
 ## 4. スクリプトを実行する。
 
