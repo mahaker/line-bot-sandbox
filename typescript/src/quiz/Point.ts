@@ -2,13 +2,13 @@ export default class Point {
 
     private point: number = 0;
 
-    init() {
+    public init() {
         this.point = 0;
     }
-    get(): number {
+    public get(): number {
         return this.point;
     }
-    increment() {
+    public increment() {
         this.point++;
     }
 }

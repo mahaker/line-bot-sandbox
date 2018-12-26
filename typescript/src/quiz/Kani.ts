@@ -6,7 +6,7 @@ export default class Kani implements Provider {
     private readonly quizzes: Quiz[] = [
         new Quiz(
             1,
-            '越前かには一年中とってよい', 
+            '越前かには一年中とってよい',
             'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
             '1問目ここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいります',
             false),
@@ -25,24 +25,24 @@ export default class Kani implements Provider {
     ];
 
     // TODO 親クラスに移譲したい
-    getQuizByNo(no: number): Quiz | undefined {
+    public getQuizByNo(no: number): Quiz | undefined {
         return this.quizzes.find(q => q.getNo() === no);
     }
 
-    init(): Quiz {
+    public init(): Quiz {
         this.index = 0;
         return this.quizzes[this.index];
     }
 
-    current(): Quiz {
+    public current(): Quiz {
         return this.quizzes[this.index];
     }
 
-    hasNext(): boolean {
+    public hasNext(): boolean {
         return this.quizzes.length - 1 > this.index;
     }
 
-    next(): Quiz {
+    public next(): Quiz {
         return this.quizzes[this.index++];
     }
 }

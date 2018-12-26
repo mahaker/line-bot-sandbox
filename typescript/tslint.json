@@ -5,7 +5,10 @@
     ],
     "jsRules": {},
     "rules": {
+        "arrow-parens": false,
+        "max-line-length": false,
         "indent": [true, "spaces", 4],
+        "interface-name": false,
         "no-console": false,
         "eofline": true,
         "quotemark": [
@@ -13,7 +16,9 @@
             "single"
         ],
         "curly": false,
-        "forin": false
+        "forin": false,
+        "ordered-imports": false,
+        "object-literal-sort-keys": false
     },
     "rulesDirectory": []
 }

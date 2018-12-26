@@ -6,19 +6,19 @@ export default class Q {
         private detail: string,
         private answer: boolean) {}
 
-    getNo(): number {
+    public getNo(): number {
         return this.no;
     }
-    getText(): string {
+    public getText(): string {
         return this.text;
     }
-    getImageUrl(): string {
+    public getImageUrl(): string {
         return this.imageUrl;
     }
-    getDetail(): string {
+    public getDetail(): string {
         return this.detail;
     }
-    isCorrect(answer: boolean): boolean {
+    public isCorrect(answer: boolean): boolean {
         return this.answer === answer;
     }
 }

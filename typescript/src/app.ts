@@ -77,13 +77,13 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
             handleQuizControl(event);
         }
     } else if (event.type === 'message') {
-        const _event: MessageEvent = event as MessageEvent;
-        const _textEventMessage: TextEventMessage = _event.message as TextEventMessage;
+        const messageEvent: MessageEvent = event as MessageEvent;
+        const textEventMessage: TextEventMessage = messageEvent.message as TextEventMessage;
 
-        if (_textEventMessage.text === 'クイズ') {
+        if (textEventMessage.text === 'クイズ') {
             pushQuiz(userId);
-        } else if (_textEventMessage.text === 'チェックリスト') {
-            await pushChecklist(_event);
+        } else if (textEventMessage.text === 'チェックリスト') {
+            await pushChecklist(messageEvent);
         } else {
             await botClient.pushMessage(userId, buildText('不正な入力です。クイズをする場合は「クイズ」、チェックリストをする場合は「チェックリスト」と入力してください。'));
         }

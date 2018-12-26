@@ -7,7 +7,7 @@
     "start": "node ./dist/bundle.js",
     "build": "mkdir -p dist && webpack",
     "clean": "rm -rf ./dist",
-    "lint": "tslint ./src/*",
+    "lint": "tslint ./src/**/*.ts",
     "test": "jest --no-cache"
   },
   "engines": {
