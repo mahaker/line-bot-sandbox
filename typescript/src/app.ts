@@ -15,7 +15,6 @@ import {
 
 /**
  * アプリ全体のTODO
- * ProcfileをREADMEに書く。
  * ボットが動いている様子を録画する。
  * lint対応
  * 複数ユーザーでテスト
