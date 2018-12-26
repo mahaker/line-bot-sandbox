@@ -16,7 +16,6 @@ import {
 /**
  * アプリ全体のTODO
  * ボットが動いている様子を録画する。
- * lint対応
  * 複数ユーザーでテスト
  * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
  */
