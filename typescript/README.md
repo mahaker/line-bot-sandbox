@@ -10,7 +10,6 @@ Please see [setting.md](./setting.md)
 
 Please see [bot/README.md](./bot/README.md)
 
-
 ## Development
 
 ``` sh
@@ -18,6 +17,16 @@ $ git clone git@github.com:mahaker/line-bot-sandbox.git
 $ cd typescript
 $ npm install
 $ npm run start 
+```
+
+## Deploy
+
+before: [setting.md](./setting.md)
+
+``` sh
+$ git add {files}
+$ git commit
+$ git push heroku master
 ```
 
 ## Build
