@@ -136,7 +136,6 @@ async function handleQuizControl(event: PostbackEvent) {
                 break;
             case (Command.DETAIL):
                 await botClient.pushMessage(userId, buildQuizDetail());
-                await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (Command.NEXT):
                 if (quizProvider.hasNext()) {
