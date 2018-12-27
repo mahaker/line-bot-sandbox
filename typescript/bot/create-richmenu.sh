@@ -105,7 +105,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
       },
       "action": {
         "type": "postback",
-        "displayText": "現在のクイズ",
+        "displayText": "現在のクイズを表示",
         "data": "{\"cmd\": \"ctrl\", \"action\": \"current\"}"
       }
     }
