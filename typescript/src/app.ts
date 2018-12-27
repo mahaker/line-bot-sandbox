@@ -1,12 +1,12 @@
-import Provider from './quiz/Provider';
-import DoneQuiz from './quiz/DoneQuiz';
-import Quiz, { Detail, Column } from './quiz/Quiz';
-import Kani from './quiz/Kani';
-import { Command } from './cmd/Command';
-import Point from './quiz/Point';
+import Provider from '@/quiz/Provider';
+import DoneQuiz from '@/quiz/DoneQuiz';
+import Quiz, { Detail, Column } from '@/quiz/Quiz';
+import Kani from '@/quiz/Kani';
+import { Command } from '@/cmd/Command';
+import Point from '@/quiz/Point';
 import Express, { Request, Response } from 'express';
-import CheckListInterlocutor from './checklist/CheckListInterlocutor';
-import MessageInnerData from './checklist/message/MessageInnerData';
+import CheckListInterlocutor from '@/checklist/CheckListInterlocutor';
+import MessageInnerData from '@/checklist/message/MessageInnerData';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
     Action, MessageEvent,
