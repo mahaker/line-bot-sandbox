@@ -11,6 +11,7 @@ import {
     MessageEvent,
     TextEventMessage, TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
+    TemplateColumn, TemplateMessage, TemplateCarousel,
 } from '@line/bot-sdk';
 
 /**
@@ -134,6 +135,7 @@ async function handleQuizControl(event: PostbackEvent) {
                 pushQuiz(userId);
                 break;
             case (Command.DETAIL):
+                await botClient.pushMessage(userId, buildQuizDetail());
                 await botClient.pushMessage(userId, buildText(currentQuiz.getDetail()));
                 break;
             case (Command.NEXT):
@@ -224,6 +226,30 @@ function buildQuizForm(q: Quiz): FlexMessage {
         altText: 'Flex message',
         contents: flexContents,
     };
+    return message;
+}
+
+// クイズの詳細をカルーセルテンプレートで表現する。
+function buildQuizDetail(): TemplateMessage {
+    const column: TemplateColumn = {
+        thumbnailImageUrl: '',
+        imageBackgroundColor: '',
+        title: '',
+        text: '',
+        actions: [],
+    }
+    const carousel: TemplateCarousel = {
+        type: 'carousel',
+        columns: [column],
+        imageAspectRatio: 'square',
+        imageSize: 'cover',
+    }
+    const message: TemplateMessage = {
+        type: 'template',
+        altText: 'quiz detail',
+        template: carousel,
+    }
+
     return message;
 }
 
