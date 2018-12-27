@@ -38,7 +38,7 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
 '{
   "size": {
     "width": 2500,
-    "height": 1686
+    "height": 843
   },
   "selected": true,
   "name": "リッチメニュー 1",
@@ -49,12 +49,12 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
         "x": 2,
         "y": 4,
         "width": 1316,
-        "height": 1118
+        "height": 557
       },
       "action": {
         "type": "postback",
         "displayText": "まる",
-        "data": "{\"label\": \"quiz\", \"cmd\": \"answer\", \"answer\": true}"
+        "data": "{\"cmd\": \"answer\", \"answer\": true}"
       }
     },
     {
@@ -62,51 +62,51 @@ NEW_RICHMENU_ID=`curl -s -X POST https://api.line.me/v2/bot/richmenu \
         "x": 1320,
         "y": 4,
         "width": 1174,
-        "height": 1116
+        "height": 555
       },
       "action": {
         "type": "postback",
         "displayText": "ばつ",
-        "data": "{\"label\": \"quiz\", \"cmd\": \"answer\", \"answer\": false}"
+        "data": "{\"cmd\": \"answer\", \"answer\": false}"
       }
     },
     {
       "bounds": {
-        "x": 4,
-        "y": 1127,
-        "width": 812,
-        "height": 559
+        "x": 0,
+        "y": 564,
+        "width": 827,
+        "height": 279
       },
       "action": {
         "type": "postback",
         "displayText": "はじめから",
-        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"restart\"}"
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"restart\"}"
       }
     },
     {
       "bounds": {
-        "x": 818,
-        "y": 1125,
-        "width": 915,
-        "height": 559
+        "x": 829,
+        "y": 561,
+        "width": 900,
+        "height": 282
       },
       "action": {
         "type": "postback",
         "displayText": "くわしく見る",
-        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"detail\"}"
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"detail\"}"
       }
     },
     {
       "bounds": {
-        "x": 1735,
-        "y": 1120,
-        "width": 765,
-        "height": 566
+        "x": 1731,
+        "y": 562,
+        "width": 769,
+        "height": 281
       },
       "action": {
         "type": "postback",
         "displayText": "次のクイズ",
-        "data": "{\"label\": \"quiz\", \"cmd\": \"ctrl\", \"action\": \"next\"}"
+        "data": "{\"cmd\": \"ctrl\", \"action\": \"next\"}"
       }
     }
   ]
