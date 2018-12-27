@@ -18,6 +18,7 @@ import {
  * アプリ全体のTODO
  * 複数ユーザーでテスト
  * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
+ * 「次のクイズ」を押さないとクイズが進まないようにする。
  */
 
 const clientConfig: ClientConfig = {
@@ -119,7 +120,10 @@ async function handleQuizControl(event: PostbackEvent) {
         }
         await botClient.pushMessage(userId, buildText(isCorrect));
 
-        if (!quizProvider.hasNext()) {
+        if (quizProvider.hasNext()) {
+            quizProvider.next();
+            pushQuiz(userId);
+        } else {
             await botClient.pushMessage(userId, buildText(`最後の問題です。点数は ${point.get()} 点でした！`));
         }
     } else if (data.cmd === 'ctrl') {
