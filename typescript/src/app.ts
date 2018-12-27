@@ -245,7 +245,7 @@ function buildQuizDetail(): TemplateMessage {
     }
     const carousel: TemplateCarousel = {
         type: 'carousel',
-        columns: [column],
+        columns: [column, column, column],
         imageAspectRatio: 'square',
         imageSize: 'cover',
     }
