@@ -8,7 +8,7 @@ import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import MessageInnerData from './checklist/message/MessageInnerData';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
-    Action, MessageEvent, MessageAction,
+    Action, MessageEvent, URIAction,
     TextEventMessage, TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
     TemplateColumn, TemplateMessage, TemplateCarousel,
@@ -135,7 +135,7 @@ async function handleQuizControl(event: PostbackEvent) {
                 pushQuiz(userId);
                 break;
             case (Command.DETAIL):
-                await botClient.pushMessage(userId, buildQuizDetail());
+                await botClient.pushMessage(userId, buildQuizDetail(currentQuiz));
                 break;
             case (Command.NEXT):
                 if (quizProvider.hasNext()) {
@@ -229,16 +229,16 @@ function buildQuizForm(q: Quiz): FlexMessage {
 }
 
 // クイズの詳細をカルーセルテンプレートで表現する。
-function buildQuizDetail(): TemplateMessage {
+function buildQuizDetail(q: Quiz): TemplateMessage {
     const action: Action = {
-        type: 'message',
+        type: 'uri',
         label: 'ラベル',
-        text: 'テキスト',
+        uri: 'https://google.com/',
     }
     const column: TemplateColumn = {
         // thumbnailImageUrl: '',
         // imageBackgroundColor: '',
-        // title: '',
+        title: 'タイトル',
         text: 'クイズの詳細',
         actions: [action],
     }
