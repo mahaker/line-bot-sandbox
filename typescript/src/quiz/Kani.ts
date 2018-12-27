@@ -10,6 +10,7 @@ export default class Kani implements Provider {
             'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
             [
                 {
+                    thumbnailImageUrl: 'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
                     title: '1問目: 越前かにについて',
                     text: '1. 漁期について',
                     details: [
@@ -24,6 +25,7 @@ export default class Kani implements Provider {
                     ]
                 },
                 {
+                    thumbnailImageUrl: 'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
                     title: '1問目: 越前かにについて',
                     text: '2. 漁期について',
                     details: [
@@ -45,6 +47,7 @@ export default class Kani implements Provider {
             'https://3.bp.blogspot.com/-odgGti-5z8I/V_4btQaDAsI/AAAAAAAA-u4/hEiqFSQZBEkZvGGQ87-lWjT3hHbvi7rGgCLcB/s400/moses_umi.png',
             [
                 {
+                    thumbnailImageUrl: 'https://3.bp.blogspot.com/-odgGti-5z8I/V_4btQaDAsI/AAAAAAAA-u4/hEiqFSQZBEkZvGGQ87-lWjT3hHbvi7rGgCLcB/s400/moses_umi.png',
                     title: '2問目: 越前かにと松葉かに',
                     text: '1. 種類について',
                     details: [
@@ -59,6 +62,7 @@ export default class Kani implements Provider {
                     ]
                 },
                 {
+                    thumbnailImageUrl: 'https://3.bp.blogspot.com/-odgGti-5z8I/V_4btQaDAsI/AAAAAAAA-u4/hEiqFSQZBEkZvGGQ87-lWjT3hHbvi7rGgCLcB/s400/moses_umi.png',
                     title: '2問目: 越前かにと松葉かに',
                     text: '2. 種類について',
                     details: [
@@ -80,6 +84,7 @@ export default class Kani implements Provider {
             'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
             [
                 {
+                    thumbnailImageUrl: 'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
                     title: '3問目: 越前かにの解禁日',
                     text: '1. 解禁日について',
                     details: [
@@ -94,6 +99,7 @@ export default class Kani implements Provider {
                     ]
                 },
                 {
+                    thumbnailImageUrl: 'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
                     title: '3問目: 越前かにの解禁日',
                     text: '2. 解禁日について',
                     details: [

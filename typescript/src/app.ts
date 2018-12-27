@@ -245,7 +245,7 @@ function buildQuizDetail(q: Quiz): TemplateMessage {
              return action;
         });
         const column: TemplateColumn = {
-            // thumbnailImageUrl: '',
+            thumbnailImageUrl: c.thumbnailImageUrl,
             // imageBackgroundColor: '',
             title: c.title,
             text: c.text,

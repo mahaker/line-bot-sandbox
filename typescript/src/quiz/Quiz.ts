@@ -4,6 +4,7 @@ export interface Detail {
 }
 
 export interface Column {
+    thumbnailImageUrl: string;
     title: string;
     text: string;
     details: Detail[];
