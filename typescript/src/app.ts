@@ -19,7 +19,6 @@ import {
  * アプリ全体のTODO
  * 複数ユーザーでテスト
  * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
- * 「次のクイズ」を押さないとクイズが進まないようにする。
  */
 
 const clientConfig: ClientConfig = {
