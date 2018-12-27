@@ -8,19 +8,46 @@ export default class Kani implements Provider {
             1,
             '越前かには一年中とってよい',
             'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
-            '1問目ここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいります',
+            [
+                {
+                    text: '1問目くわしく見る',
+                    uri: 'https://google.com/',
+                },
+                {
+                    text: '1問目くわしく見る',
+                    uri: 'https://google.com/',
+                },
+            ],
             false),
         new Quiz(
             2,
             '越前かには松葉かにと同じ種類のかにである',
             'https://3.bp.blogspot.com/-odgGti-5z8I/V_4btQaDAsI/AAAAAAAA-u4/hEiqFSQZBEkZvGGQ87-lWjT3hHbvi7rGgCLcB/s400/moses_umi.png',
-            '2問目ここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいります',
+            [
+                {
+                    text: '2問目くわしく見る',
+                    uri: 'https://github.com/mahaker/line-bot-sandbox',
+                },
+                {
+                    text: '2問目くわしく見る',
+                    uri: 'https://github.com/mahaker/line-bot-sandbox',
+                },
+            ],
             true),
         new Quiz(
             3,
             '越前かに漁の解禁日は、毎年11月6日で決まっている',
             'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
-            '3問目ここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいりますここに説明がはいります',
+            [
+                {
+                    text: '3問目くわしく見る',
+                    uri: 'https://twitter.com/',
+                },
+                {
+                    text: '3問目くわしく見る',
+                    uri: 'https://twitter.com/',
+                },
+            ],
             true),
     ];
 

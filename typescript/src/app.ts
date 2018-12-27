@@ -1,5 +1,5 @@
 import Provider from './quiz/Provider';
-import Quiz from './quiz/Quiz';
+import Quiz, { Detail } from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
 import Point from './quiz/Point';
@@ -232,17 +232,22 @@ function buildQuizForm(q: Quiz): FlexMessage {
 
 // クイズの詳細をカルーセルテンプレートで表現する。
 function buildQuizDetail(q: Quiz): TemplateMessage {
-    const action: Action = {
-        type: 'uri',
-        label: 'ラベル',
-        uri: 'https://google.com/',
-    }
+    const details: Detail[] = q.getDetails();
+
+    const actions: Action[] = details.map(detail => {
+        const action: Action = {
+            type: 'uri',
+            label: detail.text,
+            uri: detail.uri,
+        }
+        return action;
+    });
     const column: TemplateColumn = {
         // thumbnailImageUrl: '',
         // imageBackgroundColor: '',
         title: 'タイトル',
         text: 'クイズの詳細',
-        actions: [action],
+        actions: actions,
     }
     const carousel: TemplateCarousel = {
         type: 'carousel',
