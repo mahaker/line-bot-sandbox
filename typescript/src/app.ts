@@ -1,4 +1,5 @@
 import Provider from './quiz/Provider';
+import DoneQuiz from './quiz/DoneQuiz';
 import Quiz, { Detail, Column } from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
@@ -40,6 +41,9 @@ const userProviderMap = new Map<string, Provider>();
 // ユーザーと点数（point）のマッピング
 const userPointMap = new Map<string, Point>();
 
+// ユーザーと回答済みクイズのマッピング
+const userDoneQuizMap = new Map<string, DoneQuiz>();
+
 const checklist: CheckListInterlocutor = new CheckListInterlocutor(botClient);
 
 // 不要なコントローラー（サーバー起動の動作確認のため、だった気がする）
@@ -67,6 +71,9 @@ async function handleEvent(event: MessageEvent | PostbackEvent) {
     }
     if (userPointMap.get(userId) === undefined) {
         userPointMap.set(userId, new Point());
+    }
+    if (userDoneQuizMap.get(userId) === undefined) {
+        userDoneQuizMap.set(userId, new DoneQuiz());
     }
 
     if (event.type === 'postback') {
@@ -103,6 +110,11 @@ async function handleQuizControl(event: PostbackEvent) {
         return;
     }
 
+    const doneQuiz: DoneQuiz | undefined = userDoneQuizMap.get(userId);
+    if (!doneQuiz) {
+        return;
+    }
+
     const point: Point | undefined = userPointMap.get(userId);
     if (!point) {
         return;
@@ -113,11 +125,12 @@ async function handleQuizControl(event: PostbackEvent) {
         let isCorrect = '';
         if (currentQuiz.isCorrect(data.answer)) {
             isCorrect = 'せいかい！';
-            point.increment();
+            if (!doneQuiz.isDone(currentQuiz)) point.increment();
         } else {
             isCorrect = 'はずれ！';
         }
         await botClient.pushMessage(userId, buildText(isCorrect));
+        doneQuiz.add(currentQuiz);
 
         if (!quizProvider.hasNext()) {
             await botClient.pushMessage(userId, buildText(`最後の問題です。点数は ${point.get()} 点でした！`));
@@ -127,6 +140,7 @@ async function handleQuizControl(event: PostbackEvent) {
             case (Command.RESTART):
                 point.init();
                 quizProvider.init();
+                doneQuiz.init();
                 pushQuiz(userId);
                 break;
             case (Command.DETAIL):
@@ -134,9 +148,11 @@ async function handleQuizControl(event: PostbackEvent) {
                 break;
             case (Command.NEXT):
                 if (quizProvider.hasNext()) {
+                    doneQuiz.add(currentQuiz);
                     quizProvider.next();
                     pushQuiz(userId);
                 } else {
+                    doneQuiz.add(currentQuiz);
                     pushQuiz(userId);
                     await botClient.pushMessage(userId, buildText('最後の問題です。'));
                 }
