@@ -3,12 +3,18 @@ export interface Detail {
     uri: string;
 }
 
+export interface Column {
+    title: string;
+    text: string;
+    details: Detail[];
+}
+
 export default class Q {
     constructor(
         private no: number,
         private text: string,
         private imageUrl: string,
-        private details: Detail[],
+        private columns: Column[],
         private answer: boolean) {}
 
     public getNo(): number {
@@ -20,8 +26,8 @@ export default class Q {
     public getImageUrl(): string {
         return this.imageUrl;
     }
-    public getDetails(): Detail[] {
-        return this.details;
+    public getColumns(): Column[] {
+        return this.columns;
     }
     public isCorrect(answer: boolean): boolean {
         return this.answer === answer;

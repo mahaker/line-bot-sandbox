@@ -1,5 +1,5 @@
 import Provider from './quiz/Provider';
-import Quiz, { Detail } from './quiz/Quiz';
+import Quiz, { Detail, Column } from './quiz/Quiz';
 import Kani from './quiz/Kani';
 import { Command } from './cmd/Command';
 import Point from './quiz/Point';
@@ -232,26 +232,30 @@ function buildQuizForm(q: Quiz): FlexMessage {
 
 // クイズの詳細をカルーセルテンプレートで表現する。
 function buildQuizDetail(q: Quiz): TemplateMessage {
-    const details: Detail[] = q.getDetails();
-
-    const actions: Action[] = details.map(detail => {
-        const action: Action = {
-            type: 'uri',
-            label: detail.text,
-            uri: detail.uri,
+    const quizColumns: Column[] = q.getColumns();
+    
+    const columns: TemplateColumn[] = quizColumns.map(c => {
+        const details: Detail[] = c.details;
+        const actions: Action[] = details.map(detail => {
+            const action: Action = {
+                type: 'uri',
+                label: detail.text,
+                uri: detail.uri,
+            }
+             return action;
+        });
+        const column: TemplateColumn = {
+            // thumbnailImageUrl: '',
+            // imageBackgroundColor: '',
+            title: c.title,
+            text: c.text,
+            actions: actions,
         }
-        return action;
+        return column;
     });
-    const column: TemplateColumn = {
-        // thumbnailImageUrl: '',
-        // imageBackgroundColor: '',
-        title: 'タイトル',
-        text: 'クイズの詳細',
-        actions: actions,
-    }
     const carousel: TemplateCarousel = {
         type: 'carousel',
-        columns: [column, column, column],
+        columns: columns,
         imageAspectRatio: 'square',
         imageSize: 'cover',
     }

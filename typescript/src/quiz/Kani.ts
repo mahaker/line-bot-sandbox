@@ -10,12 +10,32 @@ export default class Kani implements Provider {
             'https://2.bp.blogspot.com/-DRb3BnOxdkI/Ut0BGIW0WPI/AAAAAAAAdSc/ElVKsxiY2R8/s800/ocean_night.png',
             [
                 {
-                    text: '1問目くわしく見る',
-                    uri: 'https://google.com/',
+                    title: '1問目: 越前かにについて',
+                    text: '1. 漁期について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
                 {
-                    text: '1問目くわしく見る',
-                    uri: 'https://google.com/',
+                    title: '1問目: 越前かにについて',
+                    text: '2. 漁期について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
             ],
             false),
@@ -25,12 +45,32 @@ export default class Kani implements Provider {
             'https://3.bp.blogspot.com/-odgGti-5z8I/V_4btQaDAsI/AAAAAAAA-u4/hEiqFSQZBEkZvGGQ87-lWjT3hHbvi7rGgCLcB/s400/moses_umi.png',
             [
                 {
-                    text: '2問目くわしく見る',
-                    uri: 'https://github.com/mahaker/line-bot-sandbox',
+                    title: '2問目: 越前かにと松葉かに',
+                    text: '1. 種類について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
                 {
-                    text: '2問目くわしく見る',
-                    uri: 'https://github.com/mahaker/line-bot-sandbox',
+                    title: '2問目: 越前かにと松葉かに',
+                    text: '2. 種類について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
             ],
             true),
@@ -40,12 +80,32 @@ export default class Kani implements Provider {
             'https://2.bp.blogspot.com/-Qb4PifD_GJ0/U5l53yU1gPI/AAAAAAAAhUQ/EsXm6rCGwCw/s450/animal_shachi_killer_whale.png',
             [
                 {
-                    text: '3問目くわしく見る',
-                    uri: 'https://twitter.com/',
+                    title: '3問目: 越前かにの解禁日',
+                    text: '1. 解禁日について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
                 {
-                    text: '3問目くわしく見る',
-                    uri: 'https://twitter.com/',
+                    title: '3問目: 越前かにの解禁日',
+                    text: '2. 解禁日について',
+                    details: [
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                        {
+                            text: 'くわしく見る',
+                            uri: 'https://google.com/',
+                        },
+                    ]
                 },
             ],
             true),
