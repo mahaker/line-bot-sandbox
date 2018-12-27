@@ -8,7 +8,7 @@ import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import MessageInnerData from './checklist/message/MessageInnerData';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
-    MessageEvent,
+    Action, MessageEvent, MessageAction,
     TextEventMessage, TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
     TemplateColumn, TemplateMessage, TemplateCarousel,
@@ -231,12 +231,17 @@ function buildQuizForm(q: Quiz): FlexMessage {
 
 // クイズの詳細をカルーセルテンプレートで表現する。
 function buildQuizDetail(): TemplateMessage {
+    const action: Action = {
+        type: 'message',
+        label: 'ラベル',
+        text: 'テキスト',
+    }
     const column: TemplateColumn = {
-        thumbnailImageUrl: '',
-        imageBackgroundColor: '',
-        title: '',
-        text: '',
-        actions: [],
+        // thumbnailImageUrl: '',
+        // imageBackgroundColor: '',
+        // title: '',
+        text: 'クイズの詳細',
+        actions: [action],
     }
     const carousel: TemplateCarousel = {
         type: 'carousel',
