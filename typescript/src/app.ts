@@ -8,7 +8,7 @@ import CheckListInterlocutor from './checklist/CheckListInterlocutor';
 import MessageInnerData from './checklist/message/MessageInnerData';
 import {
     Client, middleware, ClientConfig, MiddlewareConfig,
-    Action, MessageEvent, URIAction,
+    Action, MessageEvent,
     TextEventMessage, TextMessage, PostbackEvent,
     FlexMessage, FlexBubble, FlexBox, FlexImage, FlexText,
     TemplateColumn, TemplateMessage, TemplateCarousel,
@@ -18,7 +18,6 @@ import {
  * アプリ全体のTODO
  * 複数ユーザーでテスト
  * replyChecklistとhandleQuizControlを上手に見分けられるようにする。
- * クイズの詳細をカルーセルで出す。
  * 「次のクイズ」を押さないとクイズが進まないようにする。
  */
 
@@ -246,7 +245,6 @@ function buildQuizDetail(q: Quiz): TemplateMessage {
         });
         const column: TemplateColumn = {
             thumbnailImageUrl: c.thumbnailImageUrl,
-            // imageBackgroundColor: '',
             title: c.title,
             text: c.text,
             actions: actions,
