@@ -150,16 +150,10 @@ async function handleQuizControl(event: PostbackEvent) {
             case (Command.DETAIL):
                 await botClient.pushMessage(userId, buildQuizDetail(currentQuiz));
                 break;
-            case (Command.NEXT):
-                if (quizProvider.hasNext()) {
-                    doneQuiz.add(currentQuiz);
-                    quizProvider.next();
-                    pushQuiz(userId);
-                } else {
-                    doneQuiz.add(currentQuiz);
-                    pushQuiz(userId);
-                    await botClient.pushMessage(userId, buildText('最後の問題です。'));
-                }
+            case (Command.CURRENT):
+                console.log('here');
+                pushQuiz(userId);
+                console.log('hoge');
                 break;
         }
     }
