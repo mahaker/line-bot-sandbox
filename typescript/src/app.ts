@@ -23,10 +23,10 @@ import {
  */
 
 const clientConfig: ClientConfig = {
-    channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || '',
+    channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || 'channel access token',
 };
 const middlewareConfig: MiddlewareConfig = {
-    channelSecret: process.env.LINE_CHANNEL_SECRET || '',
+    channelSecret: process.env.LINE_CHANNEL_SECRET || 'channel secret',
 };
 
 const botClient = new Client(clientConfig);
